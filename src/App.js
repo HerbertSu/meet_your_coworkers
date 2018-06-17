@@ -19,9 +19,11 @@ import Register from './components/Register/Register.js';
   //After a successful registration, go to the home page of the site. DONE
   //Finish up checks on Register.js. Have checks in separate function and then call them in one big function. After
     //checks have been cleared, call registerProfile() in that big function  DONE
-  //
-  //Create onLogout() function that clears state values and sets them to their default values when Logout button is clicked
+  //Create onLogout() function that clears state values and sets them to their default values when Logout button is
+    //clicked DONE
 
+  //Create error messages that show up when a field is incorrect during registration in Register.js
+  
 
 
 
@@ -74,6 +76,19 @@ class App extends Component {
 
   setUser = (userObject) => {
     this.setState( { user : userObject});
+  }
+
+  onLogout = () =>{      
+    this.setState({
+      user:{},
+      focusName:"",
+      focusId:"",
+      robotsList: [],
+      userEmail: "",
+      profileView: false,
+      login: false,
+      registerView: false
+    })
   }
 
   fetchUserList = () =>{
@@ -151,11 +166,13 @@ class App extends Component {
     })
   }
 
+  
+
   render() {
 
     return (
       <div className="">
-        <Header />
+        <Header onLogout={this.onLogout}/>
 
         {!this.state.login ? (
           !this.state.registerView ? (

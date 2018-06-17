@@ -6,6 +6,7 @@ import StickyHeader from 'react-sticky-header';
 class Header extends Component {
     
     render(){
+        const {onLogout} = this.props;
         return(
             <div>
                 <StickyHeader
@@ -23,7 +24,7 @@ class Header extends Component {
                                 <button>Search</button>
                             </div>
                             <div className="pr2">
-                                <button>Logout</button>
+                                <button onClick={() => {onLogout()}}>Logout</button>
                             </div>
                         </div>
                     </div>

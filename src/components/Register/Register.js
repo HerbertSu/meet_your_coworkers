@@ -29,6 +29,30 @@ class Register extends Component {
         this.setState( {lastName : event.target.value});
     }
     
+    checkFirstName = (fName) => {
+        if (!fName) {
+            console.log("Please enter your first name")
+            return false;
+        } else if (!isNaN(fName)) {
+            console.log("Your name cannot be a number");
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    checkLastName = (lName) => {
+        if (!lName) {
+            console.log("Please enter your last name")
+            return false;
+        } else if (!isNaN(lName)) {
+            console.log("Your name cannot be a number");
+            return false;
+        } else{
+            return true;
+        }
+    }
+
     checkEmail = (email) => {
         try{
             if(email.includes("@") && email.includes(".com") ) {
@@ -70,9 +94,9 @@ class Register extends Component {
     }
 
 
-    checkRegistrationInputs = (email, password) => {
-        if(this.checkEmail(email) && this.checkPassword(password)){
-            this.props.registerProfile(this.state.firstName, this.state.lastName, email, password)
+    checkRegistrationInputs = (firstName, lastName, email, password) => {
+        if(this.checkFirstName(firstName) && this.checkLastName(lastName) && this.checkEmail(email) && this.checkPassword(password)){
+            this.props.registerProfile(firstName, lastName, email, password)
         }
     }
 
@@ -135,7 +159,7 @@ class Register extends Component {
                                     type="submit" 
                                     value="Register"
                                     onClick={() =>{ 
-                                        this.checkRegistrationInputs(this.state.registerEmail, this.state.registerPassword)
+                                        this.checkRegistrationInputs(this.state.firstName, this.state.lastName, this.state.registerEmail, this.state.registerPassword)
                                     }}
                                     />
                             </div>
