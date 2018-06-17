@@ -1,256 +1,201 @@
 import React, { Component } from 'react';
 import './App.css';
 import CardList from './components/CardList/CardList.js';
-import Card from './components/Card/Card.js';
+import Header from './components/Header/Header.js';
+import Profile from './components/Profile/Profile.js';
+import Login from './components/Login/Login.js';
+import Register from './components/Register/Register.js';
 
-const robotsList = [
-  {
-    "id": 1,
-    "name": "Leanne Graham",
-    "username": "Bret",
-    "email": "Sincere@april.biz",
-    "address": {
-      "street": "Kulas Light",
-      "suite": "Apt. 556",
-      "city": "Gwenborough",
-      "zipcode": "92998-3874",
-      "geo": {
-        "lat": "-37.3159",
-        "lng": "81.1496"
-      }
-    },
-    "phone": "1-770-736-8031 x56442",
-    "website": "hildegard.org",
-    "company": {
-      "name": "Romaguera-Crona",
-      "catchPhrase": "Multi-layered client-server neural-net",
-      "bs": "harness real-time e-markets"
-    }
-  },
-  {
-    "id": 2,
-    "name": "Ervin Howell",
-    "username": "Antonette",
-    "email": "Shanna@melissa.tv",
-    "address": {
-      "street": "Victor Plains",
-      "suite": "Suite 879",
-      "city": "Wisokyburgh",
-      "zipcode": "90566-7771",
-      "geo": {
-        "lat": "-43.9509",
-        "lng": "-34.4618"
-      }
-    },
-    "phone": "010-692-6593 x09125",
-    "website": "anastasia.net",
-    "company": {
-      "name": "Deckow-Crist",
-      "catchPhrase": "Proactive didactic contingency",
-      "bs": "synergize scalable supply-chains"
-    }
-  },
-  {
-    "id": 3,
-    "name": "Clementine Bauch",
-    "username": "Samantha",
-    "email": "Nathan@yesenia.net",
-    "address": {
-      "street": "Douglas Extension",
-      "suite": "Suite 847",
-      "city": "McKenziehaven",
-      "zipcode": "59590-4157",
-      "geo": {
-        "lat": "-68.6102",
-        "lng": "-47.0653"
-      }
-    },
-    "phone": "1-463-123-4447",
-    "website": "ramiro.info",
-    "company": {
-      "name": "Romaguera-Jacobson",
-      "catchPhrase": "Face to face bifurcated interface",
-      "bs": "e-enable strategic applications"
-    }
-  },
-  {
-    "id": 4,
-    "name": "Patricia Lebsack",
-    "username": "Karianne",
-    "email": "Julianne.OConner@kory.org",
-    "address": {
-      "street": "Hoeger Mall",
-      "suite": "Apt. 692",
-      "city": "South Elvis",
-      "zipcode": "53919-4257",
-      "geo": {
-        "lat": "29.4572",
-        "lng": "-164.2990"
-      }
-    },
-    "phone": "493-170-9623 x156",
-    "website": "kale.biz",
-    "company": {
-      "name": "Robel-Corkery",
-      "catchPhrase": "Multi-tiered zero tolerance productivity",
-      "bs": "transition cutting-edge web services"
-    }
-  },
-  {
-    "id": 5,
-    "name": "Chelsey Dietrich",
-    "username": "Kamren",
-    "email": "Lucio_Hettinger@annie.ca",
-    "address": {
-      "street": "Skiles Walks",
-      "suite": "Suite 351",
-      "city": "Roscoeview",
-      "zipcode": "33263",
-      "geo": {
-        "lat": "-31.8129",
-        "lng": "62.5342"
-      }
-    },
-    "phone": "(254)954-1289",
-    "website": "demarco.info",
-    "company": {
-      "name": "Keebler LLC",
-      "catchPhrase": "User-centric fault-tolerant solution",
-      "bs": "revolutionize end-to-end systems"
-    }
-  },
-  {
-    "id": 6,
-    "name": "Mrs. Dennis Schulist",
-    "username": "Leopoldo_Corkery",
-    "email": "Karley_Dach@jasper.info",
-    "address": {
-      "street": "Norberto Crossing",
-      "suite": "Apt. 950",
-      "city": "South Christy",
-      "zipcode": "23505-1337",
-      "geo": {
-        "lat": "-71.4197",
-        "lng": "71.7478"
-      }
-    },
-    "phone": "1-477-935-8478 x6430",
-    "website": "ola.org",
-    "company": {
-      "name": "Considine-Lockman",
-      "catchPhrase": "Synchronised bottom-line interface",
-      "bs": "e-enable innovative applications"
-    }
-  },
-  {
-    "id": 7,
-    "name": "Kurtis Weissnat",
-    "username": "Elwyn.Skiles",
-    "email": "Telly.Hoeger@billy.biz",
-    "address": {
-      "street": "Rex Trail",
-      "suite": "Suite 280",
-      "city": "Howemouth",
-      "zipcode": "58804-1099",
-      "geo": {
-        "lat": "24.8918",
-        "lng": "21.8984"
-      }
-    },
-    "phone": "210.067.6132",
-    "website": "elvis.io",
-    "company": {
-      "name": "Johns Group",
-      "catchPhrase": "Configurable multimedia task-force",
-      "bs": "generate enterprise e-tailers"
-    }
-  },
-  {
-    "id": 8,
-    "name": "Nicholas Runolfsdottir V",
-    "username": "Maxime_Nienow",
-    "email": "Sherwood@rosamond.me",
-    "address": {
-      "street": "Ellsworth Summit",
-      "suite": "Suite 729",
-      "city": "Aliyaview",
-      "zipcode": "45169",
-      "geo": {
-        "lat": "-14.3990",
-        "lng": "-120.7677"
-      }
-    },
-    "phone": "586.493.6943 x140",
-    "website": "jacynthe.com",
-    "company": {
-      "name": "Abernathy Group",
-      "catchPhrase": "Implemented secondary concept",
-      "bs": "e-enable extensible e-tailers"
-    }
-  },
-  {
-    "id": 9,
-    "name": "Glenna Reichert",
-    "username": "Delphine",
-    "email": "Chaim_McDermott@dana.io",
-    "address": {
-      "street": "Dayna Park",
-      "suite": "Suite 449",
-      "city": "Bartholomebury",
-      "zipcode": "76495-3109",
-      "geo": {
-        "lat": "24.6463",
-        "lng": "-168.8889"
-      }
-    },
-    "phone": "(775)976-6794 x41206",
-    "website": "conrad.com",
-    "company": {
-      "name": "Yost and Sons",
-      "catchPhrase": "Switchable contextually-based project",
-      "bs": "aggregate real-time technologies"
-    }
-  },
-  {
-    "id": 10,
-    "name": "Clementina DuBuque",
-    "username": "Moriah.Stanton",
-    "email": "Rey.Padberg@karina.biz",
-    "address": {
-      "street": "Kattie Turnpike",
-      "suite": "Suite 198",
-      "city": "Lebsackbury",
-      "zipcode": "31428-2261",
-      "geo": {
-        "lat": "-38.2386",
-        "lng": "57.2232"
-      }
-    },
-    "phone": "024-648-3804",
-    "website": "ambrose.net",
-    "company": {
-      "name": "Hoeger LLC",
-      "catchPhrase": "Centralized empowering task-force",
-      "bs": "target end-to-end models"
-    }
-  }
-]
+//TODO:
+  //Create Login Page   DONE  
+  //Create Server       DONE
+  //Connect to Server   DONE
+  //Create Database     DONE
+  //Connect to Database DONE
+  //Configure select statements to give details from the user details table.  DONE
+  //CardList.js component is not getting the name and email of users. Figure out a way to provide robotsList = user_details  DONE
+  //Add a transaction around the ./register endpoint in server.js. Udemy L229 DONE
+  //Add bcrypt.compare to check hash value vs inputted password in server.js  DONE
+  //After a successful registration, go to the home page of the site. DONE
+  //Finish up checks on Register.js. Have checks in separate function and then call them in one big function. After
+    //checks have been cleared, call registerProfile() in that big function  DONE
+  //
+  //Create onLogout() function that clears state values and sets them to their default values when Logout button is clicked
+
+
+
 
 class App extends Component {
+  
+  
+
   constructor(){
     super();
     this.state={
-      users: robotsList
+      user: {},
+      userEmail: "",
+      focusName: "",
+      focusId: "",
+      profileView: false,
+      login: false,
+      robotsList: [],
+      registerView: false
     }
+  }
+  componentDidMount(){
+    fetch('http://localhost:3000')
+      .then(response => response.json())
+      .then(data => console.log(data))
+  }
+  
+  setRobotsList = (list) =>{
+    this.setState({robotsList: list});
+  }
+
+  setFocusName = (newName) =>{
+    this.setState({focusName : newName});
+  };
+
+  setFocusId = (newId) =>{
+    this.setState({focusId : newId});
+  };
+
+  switchProfileView = () =>{
+    this.setState( { profileView : !this.state.profileView });
+  }
+
+  switchLogin = () => {
+    this.setState( {login : !this.state.login});
+  }
+
+  switchRegister = () => {
+    this.setState( {registerView : !this.state.registerView});
+  }
+
+  setUser = (userObject) => {
+    this.setState( { user : userObject});
+  }
+
+  fetchUserList = () =>{
+    fetch('http://localhost:3000/userList')
+      .then(response=> response.json())
+      .then(data => {
+        this.setRobotsList(data.robots);
+        console.log('the robots list', this.state.robotsList)
+      })
+  }
+
+
+  authenticateUser = (loginEmail, loginPassword) => {
+    let user = {};
+
+    fetch('http://localhost:3000/login', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email : loginEmail,
+        password: loginPassword
+      })
+    }).then(response=> response.json())
+      .then(data => {
+        if(data){
+          this.switchLogin();
+          this.setRobotsList(data.robots);
+
+        } else {
+          throw("Something went wrong")
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        //TODO add a <LoginError /> component to say "Wrong username or password"
+      })
+  }
+
+
+  fetchProfile = (userID) =>{
+    fetch('http://localhost:3000/profile', {
+      method: 'post',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+        id: userID
+      })
+    })
+      .then(response => response.json())
+      .then(data =>{
+        this.setUser(data.robot);
+    })
+  }
+
+  registerProfile = (firstName, lastName, email, password) => {
+    fetch('http://localhost:3000/register', {
+      method: 'post',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
+      })
+    })
+    .then(data => {
+      if(data){
+        this.fetchUserList();
+        this.switchLogin();
+      }else{
+        throw "Something went wrong";
+      }
+    })
+    .catch(err=>{
+      console.log("An error has occurred", err);
+    })
   }
 
   render() {
-    const property = "property";
 
     return (
-      <div className="tc">
-        <CardList robotsList={robotsList}/>
-        {/* <Card property={property}/> */}
+      <div className="">
+        <Header />
+
+        {!this.state.login ? (
+          !this.state.registerView ? (
+            <div>
+              <Login 
+                switchLogin={this.switchLogin} 
+                authenticateUser={this.authenticateUser}
+                fetchLogin={this.fetchLogin}
+                switchRegister={this.switchRegister}
+              />
+            </div>
+          ) : (
+            <Register 
+              switchRegister={this.switchRegister}
+              registerProfile={this.registerProfile}
+            />
+          )
+        ) : (
+          !this.state.profileView ? ( 
+            <CardList 
+              robotsList={this.state.robotsList} 
+              switchProfileView={this.switchProfileView}
+              fetchProfile={this.fetchProfile}/>
+          ) : (
+            <div >
+              <div className="flex justify-end pa2">
+                <button  onClick={() => {this.switchProfileView()}}>
+                  Back
+                </button>
+              </div>
+              <div className="pt5 pl5 pr5 pb5">
+                  <Profile user={this.state.user}  focusId={this.state.focusId}/>
+              </div>
+            </div>
+              )
+            )
+        }
+       
+
+        
       </div>
     );
   }
