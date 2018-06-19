@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import InputError from './InputError.js'
 
 class Register extends Component {
 
@@ -8,7 +9,15 @@ class Register extends Component {
             registerEmail : "",
             registerPassword : "",
             firstName: "",
-            lastName: ""
+            lastName: "",
+            fNameError: false,
+            fNameErrorMsg: "",
+            lNameError: false,
+            lNameErrorMsg: "",
+            passwordError: false,
+            passwordErrorMsg: "",
+            emailError: false,
+            emailErrorMsg: ""
         }
         
     }
@@ -29,26 +38,43 @@ class Register extends Component {
         this.setState( {lastName : event.target.value});
     }
     
+    checkStringForNumbers = (input) =>{
+        let str = String(input);
+        for( let i = 0; i < str.length; i++){
+            if(!isNaN(str.charAt(i))){
+                return true;
+            }
+        }
+    }
+
     checkFirstName = (fName) => {
         if (!fName) {
-            console.log("Please enter your first name")
+            this.setState({fNameErrorMsg: "Please enter your first name"})
             return false;
         } else if (!isNaN(fName)) {
-            console.log("Your name cannot be a number");
+            this.setState({fNameErrorMsg: "Your name cannot be a number"});
             return false;
-        } else{
+        } else if(this.checkStringForNumbers(fName)){
+            this.setState({fNameErrorMsg: "Your name cannot contain a number"});
+            return false;
+        }else{
+            this.setState({fNameErrorMsg: ""})
             return true;
         }
     }
 
     checkLastName = (lName) => {
         if (!lName) {
-            console.log("Please enter your last name")
+            this.setState({lNameErrorMsg:"Please enter your last name"})
             return false;
         } else if (!isNaN(lName)) {
-            console.log("Your name cannot be a number");
+            this.setState({lNameErrorMsg: "Your name cannot be a number"});
             return false;
-        } else{
+        }else if(this.checkStringForNumbers(lName)){
+            this.setState({lNameErrorMsg: "Your name cannot contain a number"});
+            return false;
+        }else{
+            this.setState({lNameErrorMsg:""})
             return true;
         }
     }
@@ -56,9 +82,10 @@ class Register extends Component {
     checkEmail = (email) => {
         try{
             if(email.includes("@") && email.includes(".com") ) {
+                this.setState({emailErrorMsg: ""})
                 return true;
             } else{
-                console.log("email missing @ or .com")
+                this.setState({emailErrorMsg: "Invalid email"})
                 return false;
             }
         }catch(err){
@@ -73,17 +100,20 @@ class Register extends Component {
     checkPassword = (password) =>{
         try{
             if(password.length < 8 || password.length > 48){ //needs length greater than 8 and less than 48
-                console.log("not more than 8 or less than 48")
+                this.setState({passwordErrorMsg:"Password must be more than 8 characters and less than 48"});
                 return false;
             } else {
+                this.setState({passwordErrorMsg: ""})
                 if( !this.containsSpecialChars(password) ){ //needs special characters
-                    console.log("needs special characters")
+                    this.setState({passwordErrorMsg:"Passwords needs at least one special character"})
                     return false;
                 } else{
+                    this.setState({passwordErrorMsg: ""})
                     if(password.toLowerCase() != password && password.toUpperCase() != password){
+                        this.setState({passwordErrorMsg: ""})
                         return true;
                     } else{
-                        console.log("Needs uppercase and lowercase")
+                        this.setState({passwordErrorMsg: "Passwords need at least one uppercase and one lowercase letter"})
                         return false;
                     }
                 }
@@ -95,7 +125,25 @@ class Register extends Component {
 
 
     checkRegistrationInputs = (firstName, lastName, email, password) => {
-        if(this.checkFirstName(firstName) && this.checkLastName(lastName) && this.checkEmail(email) && this.checkPassword(password)){
+        let check = true;
+
+        if (!this.checkFirstName(firstName)){
+            check = false;
+        }
+        
+        if(!this.checkLastName(lastName)){
+            check = false;
+        }
+
+        if( !this.checkEmail(email) ){
+            check = false;
+        }
+
+        if( !this.checkPassword(password)){
+            check = false;
+        }
+        
+        if(check){ 
             this.props.registerProfile(firstName, lastName, email, password)
         }
     }
@@ -120,6 +168,13 @@ class Register extends Component {
                                         id="first_name"
                                         onChange={this.setFirstName}
                                     />
+                                    <div className="gold">
+                                        {/* {!this.state.fNameError ? (  */}
+                                            <InputError errorMsg={this.state.fNameErrorMsg}/>
+                                        {/* ) : (
+                                            console.log()
+                                        )} */}
+                                    </div>
                                 </div>
                                 <div className="mt3">
                                     <label className="db fw6 lh-copy f6" >Last Name</label>
@@ -130,6 +185,13 @@ class Register extends Component {
                                         id="last_name"
                                         onChange={this.setLastName}
                                     />
+                                    <div className="gold">
+                                        {/* {!this.state.lNameError ? (  */}
+                                            <InputError errorMsg={this.state.lNameErrorMsg}/>
+                                        {/* ) : (
+                                            console.log()
+                                        )} */}
+                                    </div>
                                 </div>
                                 <div className="mt3">
                                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
@@ -140,6 +202,14 @@ class Register extends Component {
                                         id="email-address"
                                         onChange={this.setRegisterEmail}
                                     />
+                                    <div className="gold">
+                                        {/* {!this.state.emailError ? (  */}
+                                            <InputError errorMsg={this.state.emailErrorMsg}/>
+                                        {/* ) : (
+                                            console.log()
+                                        )} */}
+                                    </div>
+                                    
                                 </div>
                                 <div className="mv3">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
@@ -150,6 +220,13 @@ class Register extends Component {
                                         id="password"
                                         onChange={this.setRegisterPassword}
                                     />
+                                    <div className="gold">
+                                        {/* {!this.state.passwordError ? (  */}
+                                            <InputError errorMsg={this.state.passwordErrorMsg}/>
+                                        {/* ) : (
+                                            console.log()
+                                        )} */}
+                                    </div>
                                 </div>
                                 
                             </fieldset>

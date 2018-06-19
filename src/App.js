@@ -22,8 +22,12 @@ import Register from './components/Register/Register.js';
   //Create onLogout() function that clears state values and sets them to their default values when Logout button is
     //clicked DONE
 
-  //Create error messages that show up when a field is incorrect during registration in Register.js
-  
+  //Create error messages that show up when a field is incorrect during registration in Register.js  
+    //What if a correct input is given in one entry, then made incorrect later? ie switch the "state" when a correct value
+    //is given and switch it back when an incorrect one is given DONE
+
+  //Format register so that the error messages on incorrect inputs don't move the other components
+  //Have backend send a tailored error if we are registering with a username that's already taken
 
 
 
