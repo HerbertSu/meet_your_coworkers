@@ -10,13 +10,9 @@ class Register extends Component {
             registerPassword : "",
             firstName: "",
             lastName: "",
-            fNameError: false,
             fNameErrorMsg: "",
-            lNameError: false,
             lNameErrorMsg: "",
-            passwordError: false,
             passwordErrorMsg: "",
-            emailError: false,
             emailErrorMsg: ""
         }
         
@@ -159,7 +155,7 @@ class Register extends Component {
                         <div className="measure">
                             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                                 <legend className="f1 fw6 ph0 mh0">Register</legend>
-                                <div className="mt3">
+                                <div className="mt3 ">
                                     <label className="db fw6 lh-copy f6" >First Name</label>
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
@@ -167,13 +163,13 @@ class Register extends Component {
                                         name="first_name"  
                                         id="first_name"
                                         onChange={this.setFirstName}
-                                    />
+                                    />  
                                     <div className="gold">
-                                        {/* {!this.state.fNameError ? (  */}
+                                        {this.state.fNameErrorMsg !== "" ? ( 
                                             <InputError errorMsg={this.state.fNameErrorMsg}/>
-                                        {/* ) : (
-                                            console.log()
-                                        )} */}
+                                        ) : (
+                                            <div>&nbsp;</div>
+                                        )} 
                                     </div>
                                 </div>
                                 <div className="mt3">
@@ -186,11 +182,11 @@ class Register extends Component {
                                         onChange={this.setLastName}
                                     />
                                     <div className="gold">
-                                        {/* {!this.state.lNameError ? (  */}
+                                        {this.state.lNameErrorMsg !== "" ? ( 
                                             <InputError errorMsg={this.state.lNameErrorMsg}/>
-                                        {/* ) : (
-                                            console.log()
-                                        )} */}
+                                        ) : (
+                                            <div>&nbsp;</div>
+                                        )} 
                                     </div>
                                 </div>
                                 <div className="mt3">
@@ -203,11 +199,11 @@ class Register extends Component {
                                         onChange={this.setRegisterEmail}
                                     />
                                     <div className="gold">
-                                        {/* {!this.state.emailError ? (  */}
+                                        {this.state.emailErrorMsg ? ( 
                                             <InputError errorMsg={this.state.emailErrorMsg}/>
-                                        {/* ) : (
-                                            console.log()
-                                        )} */}
+                                        ) : (
+                                            <div>&nbsp;</div>
+                                        )}
                                     </div>
                                     
                                 </div>
@@ -221,11 +217,11 @@ class Register extends Component {
                                         onChange={this.setRegisterPassword}
                                     />
                                     <div className="gold">
-                                        {/* {!this.state.passwordError ? (  */}
+                                        {this.state.passwordErrorMsg ? ( 
                                             <InputError errorMsg={this.state.passwordErrorMsg}/>
-                                        {/* ) : (
-                                            console.log()
-                                        )} */}
+                                        ) : (
+                                            <div>&nbsp;</div>
+                                        )} 
                                     </div>
                                 </div>
                                 

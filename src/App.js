@@ -25,10 +25,12 @@ import Register from './components/Register/Register.js';
   //Create error messages that show up when a field is incorrect during registration in Register.js  
     //What if a correct input is given in one entry, then made incorrect later? ie switch the "state" when a correct value
     //is given and switch it back when an incorrect one is given DONE
-
-  //Format register so that the error messages on incorrect inputs don't move the other components
-  //Have backend send a tailored error if we are registering with a username that's already taken
-
+  //Format register so that the error messages on incorrect inputs don't move the other components  DONE
+  //Have backend send a tailored error if we are registering with a username that's already taken DONE
+  
+  //Have the error message for the email field in Register.js display "Email is already registered" if the email is already taken
+  //There is still an error when you first register an account and then try clicking
+      //on a profile
 
 
 class App extends Component {
@@ -158,11 +160,14 @@ class App extends Component {
       })
     })
     .then(data => {
-      if(data){
+      console.log("the data is", data)
+      if(data.status == 200){
         this.fetchUserList();
         this.switchLogin();
-      }else{
-        throw "Something went wrong";
+      }else if(data.status == 499){
+        throw "EMAIL ALREADY IN DATABASE";
+      } else{
+        throw "Could not insert into database";
       }
     })
     .catch(err=>{
