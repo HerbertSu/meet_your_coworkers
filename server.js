@@ -44,6 +44,8 @@ app.get('/userList', (req,res) => {
 
 
 
+
+
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
    
@@ -121,6 +123,29 @@ app.post('/profile', (req, res) => {
 
 
 
+app.post('/checkEmail', (req, res) =>{
+    const {email} = req.body;
+    
+    postgres.transaction( trx=>{
+        trx.insert({
+            useremail:email
+        })
+        .into('users')
+        .catch((err) => {
+            if(err.constraint === "users_useremail_key"){
+                res.status(299).send(false);
+            }
+            return trx.rollback;
+        })
+
+        .then(()=>{
+            res.status(200).send(true);
+            return trx.rollback})
+    })
+
+})
+
+
 app.post('/register', (req, res) => {
 
     const { firstName,lastName,email,password } = req.body;
@@ -132,6 +157,19 @@ app.post('/register', (req, res) => {
         postgres.transaction( trx => {
         
             try{
+
+                // let inner = postgres.from('users')
+                //                     .where({
+                //                         useremail : email
+                //                     })
+                //                     .limit(1);
+                // let isEditor = postgres.raw(inner).wrap("exists (', )' as isEditor");
+
+                // postgres.from('users')
+                //         .select(isEditor)
+                //         .then(data=> console.log("hope it exists", data))
+                
+
                 trx.insert({
                     useremail:email
                 })
@@ -153,8 +191,12 @@ app.post('/register', (req, res) => {
                 .then(()=>{
                     res.send(true);
                 })
-                .catch(() => {
-                    res.status(404).send("could not insert");
+                .catch((err) => {
+                    if(err.constraint === "users_useremail_key"){
+                        res.status(499).send(false);
+                    }else{
+                        res.status(404).send(false);
+                    }
                     return trx.rollback;
                 })
 
