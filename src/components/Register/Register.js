@@ -84,6 +84,8 @@ class Register extends Component {
                 this.setState({emailErrorMsg: "Invalid email"})
                 return false;
             }
+
+            
         }catch(err){
             return false;
         }
@@ -140,13 +142,16 @@ class Register extends Component {
         }
         
         if(check){ 
-            this.props.registerProfile(firstName, lastName, email, password)
+            let emailErr = this.props.registerProfile(firstName, lastName, email, password);
+
+            if(!emailErr){
+                this.setState({emailErrorMsg:"Email already exists"})
+            }   
         }
     }
 
 
     render(){
-        
 
         return(
             <div className="tc">
