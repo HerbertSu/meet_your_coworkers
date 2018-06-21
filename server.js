@@ -112,16 +112,6 @@ app.post('/profile', (req, res) => {
 })
 
 
-// app.post('/register', (req, res) =>{
-//     const password = req.body.password;
-//     bcrypt.hash(password, null, null, function(err, res) {
-//         bcrypt.compare(password, res, function(err, result){
-//             console.log(result)
-//         });
-//     })
-// } )
-
-
 
 app.post('/checkEmail', (req, res) =>{
     const {email} = req.body;
@@ -158,18 +148,6 @@ app.post('/register', (req, res) => {
         
             try{
 
-                // let inner = postgres.from('users')
-                //                     .where({
-                //                         useremail : email
-                //                     })
-                //                     .limit(1);
-                // let isEditor = postgres.raw(inner).wrap("exists (', )' as isEditor");
-
-                // postgres.from('users')
-                //         .select(isEditor)
-                //         .then(data=> console.log("hope it exists", data))
-                
-
                 trx.insert({
                     useremail:email
                 })
@@ -187,10 +165,24 @@ app.post('/register', (req, res) => {
                             return res.status(404).send("could not insert")
                         })
                 })
-                .then(trx.commit)
-                .then(()=>{
-                    res.send(true);
+                .then( () =>{
+                    return trx.select('*')
+                        .from('users')
+                        .join('user_details', 'users.userid', '=', 'user_details.userid')
+                        .then(data => {
+                            res.json({
+                                robots: data
+                            });
+                            robotsList = data; 
+                        })
+                        .catch((err) => {
+                            console.log("Could not retrieve users in /register", err)
+                        })
                 })
+                .then(trx.commit)
+                // .then(()=>{
+                //     res.send(true);
+                // })
                 .catch((err) => {
                     if(err.constraint === "users_useremail_key"){
                         res.status(499).send(false);
@@ -206,19 +198,6 @@ app.post('/register', (req, res) => {
         }); 
           
     });
-    // postgres('users').insert({useremail:email})
-    //                 // .then(response=> {
-    //                 //     response.send("hi")
-    //                 // })
-    //                 .catch( (err) => {
-    //                     res.status(404).send("Can't insert into users table");
-    //                 })
-
-
-    // bcrypt.hash(password, null, null, function(err, res) {
-    //     console.log(res);
-        
-    //     });
     
 })
 
