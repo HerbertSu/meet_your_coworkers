@@ -28,9 +28,11 @@ import Register from './components/Register/Register.js';
   //Have backend send a tailored error if we are registering with a username that's already taken DONE
   //Have the error message for the email field in Register.js display "Email is already registered" if the email 
       //is already taken DONE
-
   //There is still an error when you first register an account and then try clicking
-      //on a profile
+      //on a profile     DONE
+
+  //When we're in a clean state, registering a new email briefly shows a "Email already registered" error message before 
+      //going to the cardlist page    FIXED but still don't know whawt hte issue was
 
 
 class App extends Component {
@@ -144,6 +146,7 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data =>{
+        console.log("THE DATA.ROBOT in fetchProfile", data.robot)
         this.setUser(data.robot);
     })
   }
@@ -161,6 +164,7 @@ class App extends Component {
     })
     .then(data => {
       if(data.status == 200){
+        console.log("STATUS IS 200")
         this.fetchUserList();
         this.switchLogin();
       }else if(data.status == 499){
@@ -170,11 +174,13 @@ class App extends Component {
         throw "Could not insert into database";
       }
     })
+    .then(response => response.json())
+    .then(data=> {console.log("this is the data", data)})
     .catch(err=>{
       if(err == "EMAIL ALREADY IN DATABASE"){
-        return false;
+        return "Email-Used";
       }else{
-        return "Could not insert into database";
+        return "Could-Not-Register";
       }
     })
   }

@@ -11,7 +11,7 @@ class CardList extends Component {
             return(
                 <div onClick={ 
                     () => { 
-                        console.log(user.userid)
+                        console.log("CardList OnClick userid", user.userid)
                         fetchProfile(user.userid);
                         switchProfileView();                   
                     } 
