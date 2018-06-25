@@ -48,7 +48,7 @@ app.get('/userList', (req,res) => {
 
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
-   
+        
         postgres.select('*')
                 .from('users')
                 .where({
@@ -63,7 +63,6 @@ app.post('/login', (req, res) => {
                         .then(hashedPass=> {
                             bcrypt.compare(password, hashedPass[0].hash, function(err, result){
                                 if(result){
-                                    console.log("correct password")
                                     postgres.select('*').from('users')
                                         .join('user_details', 'users.userid', '=', 'user_details.userid')
                                         .then(data => {
@@ -73,19 +72,19 @@ app.post('/login', (req, res) => {
                                             robotsList = data; 
                                         })
                                         .catch((err)=>{
-                                            res.status(404).send("Incorrect username or password")
+                                            res.status(404).send()
                                         })
                                 }else{
-                                    res.status(404).send("Incorrect username or password")
+                                    res.status(404).send()
                                 }
                             });
                         })
                         .catch( (err) =>{
-                            res.status(404).send("Incorrect username or password")
+                            res.status(404).send()
                         })
                 })
                 .catch( (err) => {
-                    res.status(404).send("Incorrect username or password")
+                    res.status(404).send()
                 });
 })
 
