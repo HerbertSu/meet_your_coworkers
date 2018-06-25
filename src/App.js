@@ -30,9 +30,17 @@ import Register from './components/Register/Register.js';
       //is already taken DONE
   //There is still an error when you first register an account and then try clicking
       //on a profile     DONE
-
   //When we're in a clean state, registering a new email briefly shows a "Email already registered" error message before 
-      //going to the cardlist page    FIXED but still don't know whawt hte issue was
+      //going to the cardlist page    DONE
+
+
+  //After Register.js is successful, go to new page that allows user to input their details
+  //Upload photos option
+  //Add default photo if no photo found
+  //Create options to change user details
+  //Include Navigate Your Next logo in header
+  //Use a better header photo
+  
 
 
 class App extends Component {
@@ -119,19 +127,21 @@ class App extends Component {
         email : loginEmail,
         password: loginPassword
       })
-    }).then(response=> response.json())
-      .then(data => {
+    }).then(response=> {
+      if(String(response.status) == "200"){  
+        return response.json()
+      } else {
+        throw("Something went wrong")
+      }
+    })
+      .then(data => { 
         if(data){
           this.switchLogin();
           this.setRobotsList(data.robots);
-
-        } else {
-          throw("Something went wrong")
-        }
+        } 
       })
       .catch((err) => {
         console.log(err)
-        //TODO add a <LoginError /> component to say "Wrong username or password"
       })
   }
 

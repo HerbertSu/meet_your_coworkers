@@ -143,11 +143,8 @@ class Register extends Component {
         
         if(check){ 
             let emailErr = this.props.registerProfile(firstName, lastName, email, password);
-
             if(emailErr == "Email-Used"){
-                this.setState({emailErrorMsg:"Email already exists"});
-            } else if (emailErr == ""){
-                this.setState({emailErrorMsg:""});
+                this.setState({emailErrorMsg:"Email already exists"})
             } else if (emailErr == "Could-Not-Register"){
                 this.setState({emailErrorMsg:"Could not register this email"});
             } else{

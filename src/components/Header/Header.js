@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import '../../../node_modules/react-sticky-header/styles.css';
 import icon from "./navigate_your_next.png";
 import StickyHeader from 'react-sticky-header';
+// import './Header.css';
+
 
 class Header extends Component {
     
     render(){
         const {onLogout} = this.props;
         return(
-            <div>
+            <div id="header" className="imgbox">
                 <StickyHeader
                 header={
                     <div className="bb tc pb1 pt2">
@@ -30,7 +32,8 @@ class Header extends Component {
                     </div>
                 }
                 headerOnly={true}
-                backgroundImage={"https://admissions.iupui.edu/images/jaguar-life/thecity-skyline-banner.jpg"}
+                backgroundImage={"indy_skyline.jpg"}
+                className="center-fit"
                 >
                 <section>
                     

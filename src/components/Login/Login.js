@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import InputError from '../Register/InputError.js';
 
 class Login extends Component {
 
@@ -6,7 +7,8 @@ class Login extends Component {
         super(props);
         this.state = {
             signInEmail : "",
-            signInPassword : ""
+            signInPassword : "",
+            signInErrorMsg : ""
         }
     }
 
@@ -18,9 +20,33 @@ class Login extends Component {
         this.setState( {signInPassword : event.target.value});
     }
     
+    checkSignInEmail = (email) =>{
+        if(!email){
+            this.setState({signInErrorMsg: "Invalid email or password"})
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    checkSignInPassword = (password) =>{
+        if(!password){
+            this.setState({signInErrorMsg: "Invalid email or password"})
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    checkSignIn = (email,password) =>{
+        if(this.checkSignInEmail(email) && this.checkSignInPassword(password)){
+            console.log("authenticating user")
+           this.props.authenticateUser(email, password) 
+        }
+    }
 
     render(){
-        const {authenticateUser, switchRegister} = this.props;
+        const {switchRegister} = this.props;
 
         return(
             <div className="tc">
@@ -49,7 +75,13 @@ class Login extends Component {
                                         onChange={this.setSignInPassword}
                                     />
                                 </div>
-                                
+                                <div className="gold">
+                                    {this.state.signInErrorMsg ? ( 
+                                        <InputError errorMsg={this.state.signInErrorMsg}/>
+                                    ) : (
+                                        <div>&nbsp;</div>
+                                    )} 
+                                </div>
                             </fieldset>
                             <div className="">
                                 <input 
@@ -57,8 +89,7 @@ class Login extends Component {
                                     type="submit" 
                                     value="Sign in"
                                     onClick={() =>{ 
-                                        authenticateUser(this.state.signInEmail, this.state.signInPassword);
-                                        
+                                        this.checkSignIn(this.state.signInEmail, this.state.signInPassword)
                                     }}
                                     />
                             </div>
