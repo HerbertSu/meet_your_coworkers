@@ -5,6 +5,7 @@ import Header from './components/Header/Header.js';
 import Profile from './components/Profile/Profile.js';
 import Login from './components/Login/Login.js';
 import Register from './components/Register/Register.js';
+import UserDetails from './components/UserDetails/UserDetails.js'
 
 //TODO:
   //Create Login Page   DONE  
@@ -202,6 +203,7 @@ class App extends Component {
     return (
       <div className="">
         <Header onLogout={this.onLogout}/>
+        <UserDetails/>
 
         {!this.state.login ? (
           !this.state.registerView ? (
