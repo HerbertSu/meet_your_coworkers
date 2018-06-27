@@ -35,7 +35,8 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //going to the cardlist page    DONE
 
 
-  //After Register.js is successful, go to new page that allows user to input their details
+  //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
+    //the switchRegister function in App.js
   //Upload photos option
   //Add default photo if no photo found
   //Create options to change user details
@@ -55,6 +56,7 @@ class App extends Component {
       userEmail: "",
       focusName: "",
       focusId: "",
+      userDetailsView: false,
       profileView: false,
       login: false,
       robotsList: [],
@@ -78,6 +80,10 @@ class App extends Component {
   setFocusId = (newId) =>{
     this.setState({focusId : newId});
   };
+
+  switchUserDetailsView = () => {
+    this.setState({ userDetailsView: !this.state.userDetailsView});
+  }
 
   switchProfileView = () =>{
     this.setState( { profileView : !this.state.profileView });
@@ -177,7 +183,9 @@ class App extends Component {
       if(data.status == 200){
         console.log("STATUS IS 200")
         this.fetchUserList();
-        this.switchLogin();
+        this.switchUserDetailsView(); //if successful, call this.switchLogin();
+          this.switchLogin();
+
       }else if(data.status == 499){
         throw "EMAIL ALREADY IN DATABASE";
 
@@ -203,7 +211,15 @@ class App extends Component {
     return (
       <div className="">
         <Header onLogout={this.onLogout}/>
-        <UserDetails/>
+
+        {this.state.userDetailsView ? (
+          <UserDetails/>
+          
+          ) : (
+            <div>
+          </div>
+          )
+        }
 
         {!this.state.login ? (
           !this.state.registerView ? (
@@ -217,7 +233,6 @@ class App extends Component {
             </div>
           ) : (
             <Register 
-              switchRegister={this.switchRegister}
               registerProfile={this.registerProfile}
             />
           )
