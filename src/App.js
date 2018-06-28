@@ -35,6 +35,7 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //going to the cardlist page    DONE
 
 
+  //Finsh up /setUserDetails in server.js
   //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
     //the switchRegister function in App.js
   //Upload photos option
