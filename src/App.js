@@ -35,9 +35,11 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //going to the cardlist page    DONE
 
 
-  //Finsh up /setUserDetails in server.js
+  //Finish up /setUserDetails in server.js
+  //Figure out whether to call changeUserDetails() in UserDetails.js or in App.js
+  //In UserDetails.js, create state variables for all of the inputs
   //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
-    //the switchRegister function in App.js
+    //the switchRegister function in App.js   
   //Upload photos option
   //Add default photo if no photo found
   //Create options to change user details
@@ -166,6 +168,40 @@ class App extends Component {
       .then(data =>{
         console.log("THE DATA.ROBOT in fetchProfile", data.robot)
         this.setUser(data.robot);
+    })
+  }
+
+  changeUserDetails = (joinDate, 
+    batch, 
+    techTrained, 
+    techInterest, 
+    tv, 
+    hobbies, 
+    currentProject, 
+    previousProjects) =>{
+    // fetch
+    //response will be userid if successful or false if an error occurred
+    fetch('http://localhost:3000/setUserDetails', {
+      method: 'post',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+        joinDate : joinDate, 
+        batch : batch, 
+        techTrained : techTrained, 
+        techInterest : techInterest, 
+        tv : tv, 
+        hobbies : hobbies, 
+        currentProject : currentProject, 
+        previousProjects : previousProjects
+      })
+    })
+    .then(response => {
+      console.log(response)
+      if(response.status == 404){
+        console.log("Failed")
+      }else{
+        this.setFocusId(response)
+      }
     })
   }
 
