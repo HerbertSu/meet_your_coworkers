@@ -16,10 +16,10 @@ const postgres = knex({
     }
 });
 
-
 app.use( cors(), bodyParser.json());
 
-
+//TODO when we add a "Change User Details" button, make sure that when someone signs in, their userId gets saved to focusedUserID
+let focusedUserID = "";
 let robotsList = [];
 
 app.get('/', (req, res) => {
@@ -45,47 +45,46 @@ app.get('/userList', (req,res) => {
 
 
 
-
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
         
-        postgres.select('*')
-                .from('users')
-                .where({
-                    useremail : email
-                    })
-                .then(data => { 
-                    postgres.select('hash')
-                        .from('login')
-                        .where({
-                            userid : data[0].userid
-                        })
-                        .then(hashedPass=> {
-                            bcrypt.compare(password, hashedPass[0].hash, function(err, result){
-                                if(result){
-                                    postgres.select('*').from('users')
-                                        .join('user_details', 'users.userid', '=', 'user_details.userid')
-                                        .then(data => {
-                                            res.json({
-                                                robots: data
-                                            });
-                                            robotsList = data; 
-                                        })
-                                        .catch((err)=>{
-                                            res.status(404).send()
-                                        })
-                                }else{
-                                    res.status(404).send()
-                                }
-                            });
-                        })
-                        .catch( (err) =>{
-                            res.status(404).send()
-                        })
+    postgres.select('*')
+            .from('users')
+            .where({
+                useremail : email
                 })
-                .catch( (err) => {
-                    res.status(404).send()
-                });
+            .then(data => { 
+                postgres.select('hash')
+                    .from('login')
+                    .where({
+                        userid : data[0].userid
+                    })
+                    .then(hashedPass=> {
+                        bcrypt.compare(password, hashedPass[0].hash, function(err, result){
+                            if(result){
+                                postgres.select('*').from('users')
+                                    .join('user_details', 'users.userid', '=', 'user_details.userid')
+                                    .then(data => {
+                                        res.json({
+                                            robots: data
+                                        });
+                                        robotsList = data; 
+                                    })
+                                    .catch((err)=>{
+                                        res.status(404).send()
+                                    })
+                            }else{
+                                res.status(404).send()
+                            }
+                        });
+                    })
+                    .catch( (err) =>{
+                        res.status(404).send()
+                    })
+            })
+            .catch( (err) => {
+                res.status(404).send()
+            });
 })
 
 
@@ -135,11 +134,59 @@ app.post('/checkEmail', (req, res) =>{
 })
 
 
+
+
+app.post('/setUserDetails', (req,res) => {
+    //what if values are empty? 
+        //Answer: the update method automatically ignores undefined values
+    //No username field needed. Just have screen say "Hello __firstName"
+    //Might have to make sure that the date format of the input is the same as that
+        //accepted by postgresql
+    
+    focusedUserID = 3;
+    let errorCatch = false;
+    const { joinDate, 
+        batch, 
+        techTrained, 
+        techInterest, 
+        tv, 
+        hobbies, 
+        currentProject, 
+        previousProjects
+    }
+    = req.body;
+    
+    postgres.update({
+                batch : batch,
+                batch_tech: techTrained,
+                tech_interested_in : techInterest,
+                favorite_tv : tv,
+                hobbies : hobbies,
+                current_project : currentProject,
+                previous_projects : previousProjects,
+                joining_date : joinDate
+            })
+            .into('user_details')
+            .where('userid', "=", String(focusedUserID)) //maybe int?
+            .returning("userid")
+            .then(userid => {
+                console.log("focusedUserID ", focusedUserID)
+                console.log("userid ", userid)
+            })
+            .catch(() => {errorCatch = true});
+    if(errorCatch){
+        res.send("Unsuccessful");
+    }else{
+        res.send("Successful")
+    }
+})
+
+
+
 app.post('/register', (req, res) => {
 
+    
     const { firstName,lastName,email,password } = req.body;
-    
-    
 
     bcrypt.hash(password, null, null, function(err, result) {
 
@@ -163,6 +210,17 @@ app.post('/register', (req, res) => {
                             throw err;
                             return res.status(404).send("could not insert")
                         })
+                })
+                .returning('userid')
+                .then(userid => {
+                    //To be used in /setUserDetails after a user has registered
+                    focusedUserID = String(userid);
+
+                    return trx.insert({
+                        userid: parseInt(userid),
+                        first_name: firstName,
+                        last_name: lastName
+                    })
                 })
                 .then( () =>{
                     return trx.select('*')
