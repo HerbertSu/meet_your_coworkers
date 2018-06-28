@@ -143,8 +143,7 @@ app.post('/setUserDetails', (req,res) => {
     //Might have to make sure that the date format of the input is the same as that
         //accepted by postgresql
     
-    focusedUserID = 3;
-    let errorCatch = false;
+    let errorExists = false;
     const { joinDate, 
         batch, 
         techTrained, 
@@ -167,17 +166,17 @@ app.post('/setUserDetails', (req,res) => {
                 joining_date : joinDate
             })
             .into('user_details')
-            .where('userid', "=", String(focusedUserID)) //maybe int?
+            .where('userid', "=", String(focusedUserID)) 
             .returning("userid")
             .then(userid => {
                 console.log("focusedUserID ", focusedUserID)
                 console.log("userid ", userid)
             })
-            .catch(() => {errorCatch = true});
+            .catch(() => {errorExists = true});
     if(errorCatch){
-        res.send("Unsuccessful");
+        res.status(404).send(false); //unsuccessful
     }else{
-        res.send("Successful")
+        res.send(focusedUserID) //successful
     }
 })
 
@@ -193,7 +192,7 @@ app.post('/register', (req, res) => {
         postgres.transaction( trx => {
         
             try{
-
+                
                 trx.insert({
                     useremail:email
                 })
@@ -204,23 +203,22 @@ app.post('/register', (req, res) => {
                             userid: parseInt(userid),
                             hash: result
                         })
-                        .into('login')
-                        
+                        .into('login') 
+                        .returning("userid")
+                        .then(userid => {
+                            //To be used in /setUserDetails after a user has registered
+                            focusedUserID = String(userid);
+                            return trx.insert({
+                                userid: parseInt(userid),
+                                first_name: firstName,
+                                last_name: lastName
+                            })
+                            .into('user_details')
                         .catch(err =>{
                             throw err;
                             return res.status(404).send("could not insert")
+                            })
                         })
-                })
-                .returning('userid')
-                .then(userid => {
-                    //To be used in /setUserDetails after a user has registered
-                    focusedUserID = String(userid);
-
-                    return trx.insert({
-                        userid: parseInt(userid),
-                        first_name: firstName,
-                        last_name: lastName
-                    })
                 })
                 .then( () =>{
                     return trx.select('*')
@@ -250,7 +248,7 @@ app.post('/register', (req, res) => {
                 })
 
             } catch(err) {
-                res.status(404).send("could not insert");
+                res.status(404).send("Could not insert for some reason");
             }  
         }); 
           
