@@ -173,10 +173,10 @@ app.post('/setUserDetails', (req,res) => {
                 console.log("userid ", userid)
             })
             .catch(() => {errorExists = true});
-    if(errorCatch){
+    if(errorExists){
         res.status(404).send(false); //unsuccessful
     }else{
-        res.send(focusedUserID) //successful
+        res.json({focusedUserID: focusedUserID}) //successful
     }
 })
 
