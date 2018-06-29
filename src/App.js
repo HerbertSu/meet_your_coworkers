@@ -33,16 +33,17 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //on a profile     DONE
   //When we're in a clean state, registering a new email briefly shows a "Email already registered" error message before 
       //going to the cardlist page    DONE
-
+  //Figure out whether to call changeUserDetails() in UserDetails.js or in App.js 
+    //Ans: UserDetails.js         DONE
+  //In UserDetails.js, create state variables for all of the inputs     DONE
+  //Figure out when to how to show UserDetails after Register.js and before CardList.js       DONE
+  //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
+    //the switchRegister function in App.js         DONE
 
   //Finish up /setUserDetails in server.js
-  //Figure out whether to call changeUserDetails() in UserDetails.js or in App.js
-  //In UserDetails.js, create state variables for all of the inputs
-  //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
-    //the switchRegister function in App.js   
   //Upload photos option
   //Add default photo if no photo found
-  //Create options to change user details
+  //Create a button so once you're logged in you can change user details. will live in CardLists?
   //Include Navigate Your Next logo in header
   //Use a better header photo
   
@@ -66,6 +67,8 @@ class App extends Component {
       registerView: false
     }
   }
+
+
   componentDidMount(){
     fetch('http://localhost:3000')
       .then(response => response.json())
@@ -171,14 +174,7 @@ class App extends Component {
     })
   }
 
-  changeUserDetails = (joinDate, 
-    batch, 
-    techTrained, 
-    techInterest, 
-    tv, 
-    hobbies, 
-    currentProject, 
-    previousProjects) =>{
+  changeUserDetails = (joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects) =>{
     // fetch
     //response will be userid if successful or false if an error occurred
     fetch('http://localhost:3000/setUserDetails', {
@@ -195,12 +191,20 @@ class App extends Component {
         previousProjects : previousProjects
       })
     })
+    .then(response=> response.json())
     .then(response => {
-      console.log(response)
       if(response.status == 404){
         console.log("Failed")
       }else{
-        this.setFocusId(response)
+
+        this.setFocusId(response.focusedUserID)
+
+        // this.switchLogin();
+        this.switchLogin(); //Turn login to true to signify that hte user is logged in.
+        this.switchUserDetailsView();
+        
+
+        console.log("response : ",response.focusedUserID)
       }
     })
   }
@@ -220,8 +224,8 @@ class App extends Component {
       if(data.status == 200){
         console.log("STATUS IS 200")
         this.fetchUserList();
-        this.switchUserDetailsView(); //if successful, call this.switchLogin();
-          this.switchLogin();
+        this.switchUserDetailsView(); 
+        
 
       }else if(data.status == 499){
         throw "EMAIL ALREADY IN DATABASE";
@@ -250,15 +254,11 @@ class App extends Component {
         <Header onLogout={this.onLogout}/>
 
         {this.state.userDetailsView ? (
-          <UserDetails/>
+          <UserDetails changeUserDetails={this.changeUserDetails}/>
           
           ) : (
-            <div>
-          </div>
-          )
-        }
-
-        {!this.state.login ? (
+            
+        !this.state.login ? (
           !this.state.registerView ? (
             <div>
               <Login 
@@ -292,7 +292,10 @@ class App extends Component {
             </div>
               )
             )
-        }
+        
+
+      )
+    }
        
 
         
