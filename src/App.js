@@ -39,11 +39,13 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //Figure out when to how to show UserDetails after Register.js and before CardList.js       DONE
   //After Register.js is successful, go to new page that allows user to input their details. This should be done in 
     //the switchRegister function in App.js         DONE
-
-  //Finish up /setUserDetails in server.js
+  //Front end will need to updated focusedUserID once user is logged in     DONE
+  //Finish up /setUserDetails in server.js    DONE
+  //Create a button so once you're logged in you can change user details. Lives in the header.    DONE
+  //The "Change User Details" button should be "Cancel Changes" when in the changeUserDetailsView     DONE
+  
   //Upload photos option
   //Add default photo if no photo found
-  //Create a button so once you're logged in you can change user details. will live in CardLists?
   //Include Navigate Your Next logo in header
   //Use a better header photo
   
@@ -142,6 +144,15 @@ class App extends Component {
       })
     }).then(response=> {
       if(String(response.status) == "200"){  
+        console.log("Successfully logged in")
+
+        fetch('http://localhost:3000/focusedUserID')
+          .then( response => response.json())
+          .then( data => {
+            this.setFocusId(String(data.focusedUserID))
+          })
+          .catch( (err) => {console.log("failed: ", err)})
+
         return response.json()
       } else {
         throw("Something went wrong")
@@ -175,7 +186,7 @@ class App extends Component {
   }
 
   changeUserDetails = (joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects) =>{
-    // fetch
+    console.log(joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects);
     //response will be userid if successful or false if an error occurred
     fetch('http://localhost:3000/setUserDetails', {
       method: 'post',
@@ -191,19 +202,21 @@ class App extends Component {
         previousProjects : previousProjects
       })
     })
-    .then(response=> response.json())
+    .then(response=> {
+      console.log("response received from setUserDetails", response)
+      return response.json()
+    })
     .then(response => {
       if(response.status == 404){
         console.log("Failed")
       }else{
 
         this.setFocusId(response.focusedUserID)
-
-        // this.switchLogin();
-        this.switchLogin(); //Turn login to true to signify that hte user is logged in.
+        if(this.state.login == false){
+          this.switchLogin(); //Turn login to true to signify that the user is logged in.
+        }
         this.switchUserDetailsView();
         
-
         console.log("response : ",response.focusedUserID)
       }
     })
@@ -251,7 +264,11 @@ class App extends Component {
 
     return (
       <div className="">
-        <Header onLogout={this.onLogout}/>
+        <Header onLogout={this.onLogout} 
+                login={this.state.login} 
+                switchUserDetailsView={this.switchUserDetailsView}
+                userDetailsView={this.state.userDetailsView}
+        />
 
         {this.state.userDetailsView ? (
           <UserDetails changeUserDetails={this.changeUserDetails}/>

@@ -6,14 +6,14 @@ class UserDetails extends Component {
         super(props);
         this.state = {
             imageURL : "",
-            joinDate : "",
-            batch : "",
-            techTrained : "",
-            techInterest : "",
-            tv : "",
-            hobbies : "",
-            currentProject : "",
-            previousProject : ""
+            joinDate : undefined,
+            batch : undefined,
+            techTrained : undefined,
+            techInterest : undefined,
+            tv : undefined,
+            hobbies : undefined,
+            currentProject : undefined,
+            previousProjects : undefined
         }
     }
 
@@ -49,8 +49,8 @@ class UserDetails extends Component {
         this.setState({currentProject : event.target.value})
     }
 
-    setPreviousProject = (event) => {
-        this.setState({previousProject : event.target.value})
+    setPreviousProjects = (event) => {
+        this.setState({previousProjects : event.target.value})
     }
 
 
@@ -89,15 +89,18 @@ class UserDetails extends Component {
                             Current Project: <input type={"text"} onChange={this.setCurrentProject} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
                         </div>
                         <div className="flex justify-between">
-                            Previous Projects: <input type={"text"} onChange={this.setPreviousProject} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Previous Projects: <input type={"text"} onChange={this.setPreviousProjects} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
                         </div>
                     </div>
                 </div>
                 <div className="tc pa4">
-                    <button onClick={() => {this.props.changeUserDetails(this.state.joinDate, this.state.batch, 
-                        this.state.techTrained, this.state.techInterest, 
-                        this.state.tv, this.state.hobbies, 
-                        this.state.currentProject, this.state.previousProjects)}}> Submit </button>
+                    <button onClick={() => {
+                        this.props.changeUserDetails(this.state.joinDate, this.state.batch, 
+                            this.state.techTrained, this.state.techInterest, 
+                            this.state.tv, this.state.hobbies, 
+                            this.state.currentProject, this.state.previousProjects)}}> 
+                        Submit
+                    </button>
                 </div>
             </div>
         )
