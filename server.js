@@ -43,7 +43,15 @@ app.get('/userList', (req,res) => {
 })
 
 
-
+app.get('/focusedUserID', (req,res) => {
+    if(focusedUserID){
+        res.json({
+            focusedUserID : focusedUserID
+        });
+    }else{
+        res.status(404).send(false);
+    }
+})
 
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
@@ -54,6 +62,8 @@ app.post('/login', (req, res) => {
                 useremail : email
                 })
             .then(data => { 
+                focusedUserID = data[0].userid;
+                console.log(focusedUserID);
                 postgres.select('hash')
                     .from('login')
                     .where({
@@ -144,7 +154,7 @@ app.post('/setUserDetails', (req,res) => {
         //accepted by postgresql
     
     let errorExists = false;
-    const { joinDate, 
+    const {joinDate, 
         batch, 
         techTrained, 
         techInterest, 
@@ -154,7 +164,7 @@ app.post('/setUserDetails', (req,res) => {
         previousProjects
     }
     = req.body;
-    
+    console.log(req.body);
     postgres.update({
                 batch : batch,
                 batch_tech: techTrained,
@@ -167,12 +177,18 @@ app.post('/setUserDetails', (req,res) => {
             })
             .into('user_details')
             .where('userid', "=", String(focusedUserID)) 
-            .returning("userid")
-            .then(userid => {
-                console.log("focusedUserID ", focusedUserID)
-                console.log("userid ", userid)
+            .then(()=>{
+                console.log("This ran")
             })
-            .catch(() => {errorExists = true});
+            // .returning("userid")
+            // .then(userid => {
+            //     console.log("focusedUserID ", focusedUserID)
+            //     console.log("userid ", userid)
+            // })
+            .catch(() => {
+                console.log("Could not change user details")
+                errorExists = true
+            });
     if(errorExists){
         res.status(404).send(false); //unsuccessful
     }else{
