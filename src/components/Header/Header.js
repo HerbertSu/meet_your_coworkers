@@ -18,10 +18,15 @@ class Header extends Component {
             <div id="header" className="imgbox">
                 <StickyHeader
                 header={
-                    <div className="bb tc pb1 pt2">
-                        {/* <img alt="Infosys: Navigate Your Next" src= {icon} /> */}
-                        <div> 
-                            <h1 className="ba bw2 dib br4 tc pa2 bg-white-50">Infosys: Navigate Your Next</h1>
+                    <div className="bb tc pb1">
+                        
+                        <div className="flex justify-start pl4"> 
+                            <h1 style={{color:"white"}} className="dib">Meet the Infoscions</h1>
+                            {/* <img alt="Infosys: Navigate Your Next" 
+                                className=""
+                                height="50px" 
+                                width="auto" 
+                                src= {icon}></img> */}
                         </div>
 
                         {this.props.login ? (
@@ -46,6 +51,7 @@ class Header extends Component {
                     </div>
                 }
                 headerOnly={true}
+                backgroundColor={"#016ECF"}
                 backgroundImage={"indy_skyline.jpg"}
                 className="center-fit"
                 >

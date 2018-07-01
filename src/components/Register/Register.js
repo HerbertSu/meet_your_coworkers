@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import InputError from './InputError.js'
+import plantWall from '../../images/infosys_plant_wall.JPG';
 
 class Register extends Component {
 
@@ -157,7 +158,14 @@ class Register extends Component {
     render(){
 
         return(
-            <div className="tc">
+            <div className="flex justify-start pl4">
+                <img alt="Infosys: Navigate Your Next" 
+                    className="vh-75 w-auto br3 ba b--black-10 mv4 shadow-5"
+                    height="auto" 
+                    width="auto" 
+                    src= {plantWall}>
+                </img> 
+
                <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
                     <main className="pa4 black-80">
                         <div className="measure">
@@ -243,6 +251,10 @@ class Register extends Component {
                                         this.checkRegistrationInputs(this.state.firstName, this.state.lastName, this.state.registerEmail, this.state.registerPassword)
                                     }}
                                     />
+
+                            <div className="lh-copy mt3">
+                                <p className="f6 pointer link dim black db" onClick={() => this.props.switchRegister()}>Back to Sign In</p>
+                            </div>
                             </div>
                         </div>
                     </main>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import InputError from '../Register/InputError.js';
+import plantWall from '../../images/infosys_plant_wall.JPG';
+import './Login.css';
 
 class Login extends Component {
 
@@ -49,8 +51,16 @@ class Login extends Component {
         const {switchRegister} = this.props;
 
         return(
-            <div className="tc">
-               <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+            <div className="flex ">
+                <img alt="Infosys: Navigate Your Next" 
+                    className="vh-75 w-auto br3 ba b--black-10 mv4 shadow-5"
+                    height="auto" 
+                    width="auto" 
+                    src= {plantWall}>
+                </img> 
+
+
+                <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
                     <main className="pa4 black-80">
                         <div className="measure">
                             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">

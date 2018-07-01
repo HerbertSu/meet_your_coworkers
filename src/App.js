@@ -43,11 +43,12 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //Finish up /setUserDetails in server.js    DONE
   //Create a button so once you're logged in you can change user details. Lives in the header.    DONE
   //The "Change User Details" button should be "Cancel Changes" when in the changeUserDetailsView     DONE
-  
+  //Include Navigate Your Next logo in header   DONE
+  //Added an image of the plant wall on the 22nd floor to the login and registration page. Also added new font family.   DONE
+
   //Upload photos option
   //Add default photo if no photo found
-  //Include Navigate Your Next logo in header
-  //Use a better header photo
+  //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary 
   
 
 
@@ -288,6 +289,7 @@ class App extends Component {
           ) : (
             <Register 
               registerProfile={this.registerProfile}
+              switchRegister={this.switchRegister}
             />
           )
         ) : (

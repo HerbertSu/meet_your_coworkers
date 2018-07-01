@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Encode Sans Condensed', sans-serif;
+  /* color: white; */
   background-image: url("https://s-media-cache-ak0.pinimg.com/originals/4f/2f/7d/4f2f7d2aa8582dcca07ca3eb600e922b.jpg")
 }
