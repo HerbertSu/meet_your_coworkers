@@ -45,10 +45,15 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //The "Change User Details" button should be "Cancel Changes" when in the changeUserDetailsView     DONE
   //Include Navigate Your Next logo in header   DONE
   //Added an image of the plant wall on the 22nd floor to the login and registration page. Also added new font family.   DONE
+  //When a new user registers their details, the values don't show up when their card is clicked        DONE
 
   //Upload photos option
   //Add default photo if no photo found
-  //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary 
+  //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary
+  //Create an "Property" component for Profile.js for the user details that exist
+  //Currently, robotsList, a list of all of the users in the database, is being saved on the backend and 
+    //sent over to the front end. Should probably delete this and just have the front end call the backened/database
+    //whenever it wants user information
   
 
 

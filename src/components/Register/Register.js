@@ -93,7 +93,7 @@ class Register extends Component {
     }
 
     containsSpecialChars(str){
-        return /[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(str);
+        return /[~`!#$%\^&*+=@\-\[\]\\';,/{}|\\":<>\?]/g.test(str);
     }
 
     checkPassword = (password) =>{
