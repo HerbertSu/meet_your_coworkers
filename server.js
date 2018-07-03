@@ -102,18 +102,35 @@ app.post('/profile', (req, res) => {
     const userId = req.body.id;
     let user = {};
     try{
-        robotsList.some( (robot) => {
-            if (String(robot.userid) === String(userId)){
-                res.json({
-                    robot: robot
-                });
-                return user = robot;
-            }
-        }) 
+        postgres.select('*')
+                .from('users')
+                .join('user_details', 'users.userid', '=', 'user_details.userid')
+                .where('users.userid', "=", String(userId)) 
+                .then( data => {
 
-        if(Object.keys(user).length === 0 && user.constructor === Object){
-            throw "User not found";
-        }
+                    if (data === undefined || data.length == 0) {
+                        throw "User not found";
+                    }else{
+                        res.json({
+                            robot: data[0]
+                        })
+                    }
+                })
+        
+
+        
+        // robotsList.some( (robot) => {
+        //     if (String(robot.userid) === String(userId)){
+        //         res.json({
+        //             robot: robot
+        //         });
+        //         return user = robot;
+        //     }
+        // }) 
+
+        // if(Object.keys(user).length === 0 && user.constructor === Object){
+        //     throw "User not found";
+        // }
     } catch(err){
         res.status(404).send(err);
     }
@@ -177,6 +194,8 @@ app.post('/setUserDetails', (req,res) => {
             })
             .into('user_details')
             .where('userid', "=", String(focusedUserID)) 
+            .returning("*")
+            .then(data => console.log("Here are the details: ",data))
             .then(()=>{
                 console.log("This ran")
             })
