@@ -4,17 +4,11 @@ import Property from './Property.js';
 class Profile extends Component {    
     
     render(){
-        const {user, focusId} = this.props;
+        const {user} = this.props;
 
-        //retrieve all of the non-null user properties from Profiles table and save it in an array
-        //do the array-of-components thing to show them all
-
-        console.log("HI THIS IS THE USER", user)
-        
         delete user["key"];
 
         let key_value_pairs = Object.entries(user);
-
 
         let properties = key_value_pairs.map( (array) => {
             var newObj = {};
@@ -26,7 +20,6 @@ class Profile extends Component {
 
         
         for (let i = 0; i <properties.length; i++){
-            let key = Object.keys(properties[i])[0];
             let value = properties[i][Object.keys(properties[i])[0]];
             if(!value || value === null || value === ""){             
                 properties.splice(i, 1);

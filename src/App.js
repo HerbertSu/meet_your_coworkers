@@ -51,9 +51,13 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //Create a "Property" component for Profile.js for the user details that exist      DONE
 
 
+  //Have PlantWall image disappear if screen is minimized too small. Instead, it should just show either the 
+    //Login or Register component
+  //Add a check that makes sure Joining Date in UserDetails.js is a date
   //Add comments, clean up, and update README
   //Upload photos option
   //Add default photo if no photo found
+  //Set a limit on the possible text entries for user profiles
   //Add searchbar feature with dropdown menu that allows you to choose how you want to filter the people 
     //default should be by first name
   //Currently, robotsList, a list of all of the users in the database, is being saved on the backend and 
@@ -82,12 +86,6 @@ class App extends Component {
     }
   }
 
-
-  componentDidMount(){
-    fetch('http://localhost:3000')
-      .then(response => response.json())
-      .then(data => console.log(data))
-  }
   
   setRobotsList = (list) =>{
     this.setState({robotsList: list});
@@ -145,8 +143,6 @@ class App extends Component {
 
 
   authenticateUser = (loginEmail, loginPassword) => {
-    let user = {};
-
     fetch('http://localhost:3000/login', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -155,8 +151,7 @@ class App extends Component {
         password: loginPassword
       })
     }).then(response=> {
-      if(String(response.status) == "200"){  
-        console.log("Successfully logged in")
+      if(String(response.status) === "200"){  
 
         fetch('http://localhost:3000/focusedUserID')
           .then( response => response.json())
@@ -192,7 +187,6 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data =>{
-        console.log("THE DATA.ROBOT in fetchProfile", data.robot)
         this.setUser(data.robot);
     })
   }
@@ -214,7 +208,6 @@ class App extends Component {
       })
     })
     .then(response=> {
-      console.log("response received from setUserDetails", response)
       return response.json()
     })
     .then(response => {
@@ -227,8 +220,6 @@ class App extends Component {
           this.switchLogin(); //Turn login to true to signify that the user is logged in.
         }
         this.switchUserDetailsView();
-        
-        console.log("response : ",response.focusedUserID)
       }
     })
   }
@@ -246,7 +237,6 @@ class App extends Component {
     })
     .then(data => {
       if(data.status == 200){
-        console.log("STATUS IS 200")
         this.fetchUserList();
         this.switchUserDetailsView(); 
         
@@ -305,7 +295,6 @@ class App extends Component {
         ) : (
           !this.state.profileView ? ( 
             <CardList 
-              // fetchUserList={this.fetchUserList}
               robotsList={this.state.robotsList} 
               switchProfileView={this.switchProfileView}
               fetchProfile={this.fetchProfile}/>
@@ -317,13 +306,11 @@ class App extends Component {
                 </button>
               </div>
               <div className="pt5 pl5 pr5 pb5">
-                  <Profile user={this.state.user}  focusId={this.state.focusId}/>
+                  <Profile user={this.state.user}/>
               </div>
             </div>
               )
             )
-        
-
       )
     }
        

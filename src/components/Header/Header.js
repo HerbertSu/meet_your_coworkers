@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../../node_modules/react-sticky-header/styles.css';
-import icon from "./navigate_your_next.png";
+// import icon from "./navigate_your_next.png";  //TODO: Include a background image in the header?
 import StickyHeader from 'react-sticky-header';
 
 
@@ -22,11 +22,6 @@ class Header extends Component {
                         
                         <div className="flex justify-start pl4"> 
                             <h1 style={{color:"white"}} className="dib">Meet the Infoscions</h1>
-                            {/* <img alt="Infosys: Navigate Your Next" 
-                                className=""
-                                height="50px" 
-                                width="auto" 
-                                src= {icon}></img> */}
                         </div>
 
                         {this.props.login ? (

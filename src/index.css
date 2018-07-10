@@ -22,4 +22,5 @@ button {
 button:hover {
   background-color: black;
   border-radius: 0.25rem;
+  cursor: pointer;
 }

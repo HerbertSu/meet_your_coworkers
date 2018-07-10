@@ -42,7 +42,6 @@ class Login extends Component {
 
     checkSignIn = (email,password) =>{
         if(this.checkSignInEmail(email) && this.checkSignInPassword(password)){
-            console.log("authenticating user")
            this.props.authenticateUser(email, password) 
         }
     }
