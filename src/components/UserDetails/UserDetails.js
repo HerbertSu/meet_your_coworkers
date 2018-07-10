@@ -60,7 +60,8 @@ class UserDetails extends Component {
                 <div className = "flex pa4 justify-center" >
                     <div className="pr5">
                         <div>
-                            <img className="ba bw1 br2" alt="404 Phot not found." src="https://media.glamour.com/photos/5a425fd3b6bcee68da9f86f8/master/w_644,c_limit/best-face-oil.png" height="200px" width="auto"/>
+                            <img className="ba bw1 br2" alt="404 Phot not found." src="http://podkarpackie.regiopedia.pl/sites/default/files/imagecache/200x200/sites/all/themes/regiopedia_theme/img/no_sprite/default-avatar.png" height="200px" width="auto"/>
+                            {/* <img className="ba bw1 br2" alt="404 Phot not found." src="https://media.glamour.com/photos/5a425fd3b6bcee68da9f86f8/master/w_644,c_limit/best-face-oil.png" height="200px" width="auto"/> */}
                         </div>
                         <div className="ba dib pa2 br3 bw1 shadow-5 ">
                             <input type="file" name="pic" accept="image/*" onChange={this.setImageURL}/>

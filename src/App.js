@@ -46,19 +46,25 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //Include Navigate Your Next logo in header   DONE
   //Added an image of the plant wall on the 22nd floor to the login and registration page. Also added new font family.   DONE
   //When a new user registers their details, the values don't show up when their card is clicked        DONE
+  
+  //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary     DONE
+  //Create a "Property" component for Profile.js for the user details that exist      DONE
 
+
+  //Add comments, clean up, and update README
   //Upload photos option
   //Add default photo if no photo found
-  //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary
-  //Create an "Property" component for Profile.js for the user details that exist
+  //Add searchbar feature with dropdown menu that allows you to choose how you want to filter the people 
+    //default should be by first name
   //Currently, robotsList, a list of all of the users in the database, is being saved on the backend and 
     //sent over to the front end. Should probably delete this and just have the front end call the backened/database
     //whenever it wants user information
+      //Issues with changing in CardList is that it is asynchronous and I am trying to use a variable 
+      //populated by fetch before fetch actually gets a chance to run
   
 
 
 class App extends Component {
-  
   
 
   constructor(){
@@ -129,11 +135,11 @@ class App extends Component {
   }
 
   fetchUserList = () =>{
-    fetch('http://localhost:3000/userList')
+    return fetch('http://localhost:3000/userList')
       .then(response=> response.json())
       .then(data => {
         this.setRobotsList(data.robots);
-        console.log('the robots list', this.state.robotsList)
+        // console.log('the robots list', this.state.robotsList)
       })
   }
 
@@ -192,7 +198,6 @@ class App extends Component {
   }
 
   changeUserDetails = (joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects) =>{
-    console.log(joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects);
     //response will be userid if successful or false if an error occurred
     fetch('http://localhost:3000/setUserDetails', {
       method: 'post',
@@ -300,6 +305,7 @@ class App extends Component {
         ) : (
           !this.state.profileView ? ( 
             <CardList 
+              // fetchUserList={this.fetchUserList}
               robotsList={this.state.robotsList} 
               switchProfileView={this.switchProfileView}
               fetchProfile={this.fetchProfile}/>

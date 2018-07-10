@@ -4,8 +4,11 @@ import Card from '../Card/Card.js';
 class CardList extends Component {
     render(){
         const {robotsList, fetchProfile, setFocusName, setFocusId, switchProfileView} = this.props;
-
-        console.log(robotsList);
+        // const {fetchUserList, fetchProfile, setFocusName, setFocusId, switchProfileView} = this.props;
+        // console.log("RAN")
+        // let robotsList = fetchUserList();
+        
+        // console.log("CARDLIST ROBOTLIST",robotsList);
         
         const cardComponent = robotsList.map( (user, i) =>{
             return(

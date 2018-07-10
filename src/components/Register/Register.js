@@ -158,7 +158,7 @@ class Register extends Component {
     render(){
 
         return(
-            <div className="flex justify-start pl4">
+            <div className="flex">
                 <img alt="Infosys: Navigate Your Next" 
                     className="vh-75 w-auto br3 ba b--black-10 mv4 shadow-5"
                     height="auto" 
@@ -166,12 +166,12 @@ class Register extends Component {
                     src= {plantWall}>
                 </img> 
 
-               <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-                    <main className="pa4 black-80">
+               <article className="vh-75 br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+                    <main className="pa2 black-80">
                         <div className="measure">
                             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                                 <legend className="f1 fw6 ph0 mh0">Register</legend>
-                                <div className="mt3 ">
+                                <div className="mt2 ">
                                     <label className="db fw6 lh-copy f6" >First Name</label>
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
@@ -188,7 +188,7 @@ class Register extends Component {
                                         )} 
                                     </div>
                                 </div>
-                                <div className="mt3">
+                                <div className="mt2">
                                     <label className="db fw6 lh-copy f6" >Last Name</label>
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
@@ -205,7 +205,7 @@ class Register extends Component {
                                         )} 
                                     </div>
                                 </div>
-                                <div className="mt3">
+                                <div className="mt2">
                                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
@@ -223,7 +223,7 @@ class Register extends Component {
                                     </div>
                                     
                                 </div>
-                                <div className="mv3">
+                                <div className="mv2">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                                     <input 
                                         className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
@@ -252,7 +252,7 @@ class Register extends Component {
                                     }}
                                     />
 
-                            <div className="lh-copy mt3">
+                            <div className="lh-copy">
                                 <p className="f6 pointer link dim black db" onClick={() => this.props.switchRegister()}>Back to Sign In</p>
                             </div>
                             </div>
