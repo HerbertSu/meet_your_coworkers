@@ -12,7 +12,7 @@ class Header extends Component {
             if(this.props.userDetailsView){
                 changeUserButtonValue = "Back";
             } else {
-                changeUserButtonValue = "Change User Details";
+                changeUserButtonValue = "Change My Details";
             }
         return(
             <div id="header" className="imgbox">

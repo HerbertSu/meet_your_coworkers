@@ -99,7 +99,7 @@ class Register extends Component {
     checkPassword = (password) =>{
         try{
             if(password.length < 8 || password.length > 48){ //needs length greater than 8 and less than 48
-                this.setState({passwordErrorMsg:"Password must be more than 8 characters and less than 48"});
+                this.setState({passwordErrorMsg:"Password must be between 8 and 48 characters"});
                 return false;
             } else {
                 this.setState({passwordErrorMsg: ""})
@@ -123,7 +123,8 @@ class Register extends Component {
     }
 
 
-    checkRegistrationInputs = (firstName, lastName, email, password) => {
+    checkRegistrationInputs =async (firstName, lastName, email, password) => {
+
         let check = true;
 
         if (!this.checkFirstName(firstName)){
@@ -142,8 +143,27 @@ class Register extends Component {
             check = false;
         }
         
+
+        /*
+            Below, I am attempting to have react show an error message if the registration email is already taken.
+        This means the front end has to ask the server to check with the database to see if the given email
+        already exists in the database. The database then responds to the server, which then responds to the 
+        front-end. Since I will need to use a fetch() function (which is a Promise) that lives in 
+        App.js (the parent of Register.js), I ran into an issue where the code in Register.js would finish running
+        before my fetch in App.js finished. Register.js then wouldn't show an error message because it wouldn't 
+        know if there was an error or not. Instead, emailErr was 'undefined'.
+        
+        To solve this, I had to make sure registerProfile() ran completely in App.js before it finshed and reentered
+        checkRegistrationInputs. This was done by making both checkRegistrationInputs() and registerProfile() 
+        asynchronous, while making everything inside registerProfile() synchronous. The latter part was achieved by
+        adding the "await" keyword in front of the fetch() inside registerProfile(), which forces JS to wait until
+        fetch() finishes before moving on with the rest of registerProfile()
+        */
         if(check){ 
-            let emailErr = this.props.registerProfile(firstName, lastName, email, password);
+            console.log("before calling in RegisterJS")
+            let emailErr = await this.props.registerProfile(firstName, lastName, email, password);
+            // console.log("emailErr ", emailErr)
+            console.log("after calling registerProfile (inside RegisterJS). emailErr is ", emailErr)
             if(emailErr == "Email-Used"){
                 this.setState({emailErrorMsg:"Email already exists"})
             } else if (emailErr == "Could-Not-Register"){
@@ -153,6 +173,7 @@ class Register extends Component {
             }
         }
     }
+
 
 
     render(){

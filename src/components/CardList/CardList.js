@@ -3,9 +3,9 @@ import Card from '../Card/Card.js';
 
 class CardList extends Component {
     render(){
-        const {robotsList, fetchProfile, switchProfileView} = this.props;
+        const {usersList, fetchProfile, switchProfileView} = this.props;
         
-        const cardComponent = robotsList.map( (user, i) =>{
+        const cardComponent = usersList.map( (user, i) =>{
             return(
                 <div onClick={ 
                     () => { 

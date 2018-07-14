@@ -1,3 +1,7 @@
+/*
+Author: Herbert Su
+*/
+
 import React, { Component } from 'react';
 import './App.css';
 import CardList from './components/CardList/CardList.js';
@@ -46,9 +50,14 @@ import UserDetails from './components/UserDetails/UserDetails.js'
   //Include Navigate Your Next logo in header   DONE
   //Added an image of the plant wall on the 22nd floor to the login and registration page. Also added new font family.   DONE
   //When a new user registers their details, the values don't show up when their card is clicked        DONE
-  
   //When registering, I don't like how it scrolls. Customize the spacing so that scrolling is unnecessary     DONE
   //Create a "Property" component for Profile.js for the user details that exist      DONE
+  //There seems to be an error. Register no longer updates the emailErr field if the email is already used. What's
+    //happening (I believe) is that the promise in registerProfile (in App.js) is running after checkRegistrationInputs,
+    //which is causing emailErr (in Register.js) to be undefined 
+    //check out https://javascript.info/async-await to learn more about Async-Awaits
+    //The above issue will also solve us not getting an error when an incorrect email or password is given to Login.js  
+      //DONE
 
 
   //Have PlantWall image disappear if screen is minimized too small. Instead, it should just show either the 
@@ -66,6 +75,8 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //Issues with changing in CardList is that it is asynchronous and I am trying to use a variable 
       //populated by fetch before fetch actually gets a chance to run
   
+  
+
 
 
 class App extends Component {
@@ -75,20 +86,25 @@ class App extends Component {
     super();
     this.state={
       user: {},
-      userEmail: "",
       focusName: "",
       focusId: "",
       userDetailsView: false,
       profileView: false,
       login: false,
-      robotsList: [],
-      registerView: false
+      registerView: false,
+      usersList: [],
+      emailAlreadyRegisteredErr: "",
     }
   }
 
   
-  setRobotsList = (list) =>{
-    this.setState({robotsList: list});
+  //Setter functions for state variables
+  setEmailedAlreadyRegisteredErr = () => {
+    this.setState({emailAlreadyRegisteredErr: "Email already exists"})
+  }
+
+  setUsersList = (list) =>{
+    this.setState({usersList: list});
   }
 
   setFocusName = (newName) =>{
@@ -119,31 +135,34 @@ class App extends Component {
     this.setState( { user : userObject});
   }
 
+  
+  //For Logout button. Resets all state variables to their default values.
   onLogout = () =>{      
     this.setState({
       user:{},
       focusName:"",
       focusId:"",
-      robotsList: [],
-      userEmail: "",
+      usersList: [],
       profileView: false,
       login: false,
       registerView: false
     })
   }
 
+
+
   fetchUserList = () =>{
     return fetch('http://localhost:3000/userList')
       .then(response=> response.json())
       .then(data => {
-        this.setRobotsList(data.robots);
-        // console.log('the robots list', this.state.robotsList)
+        this.setUsersList(data.robots);
       })
   }
 
 
-  authenticateUser = (loginEmail, loginPassword) => {
-    fetch('http://localhost:3000/login', {
+  authenticateUser = async (loginEmail, loginPassword) => {
+
+    return await fetch('http://localhost:3000/login', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -159,22 +178,25 @@ class App extends Component {
             this.setFocusId(String(data.focusedUserID))
           })
           .catch( (err) => {console.log("failed: ", err)})
-
-        return response.json()
+        
+        return response.json()  // response.json() is a Promise
       } else {
         throw("Something went wrong")
+        return false;
       }
     })
       .then(data => { 
         if(data){
           this.switchLogin();
-          this.setRobotsList(data.robots);
-        } 
+          this.setUsersList(data.robots);
+          return true;
+        }
       })
       .catch((err) => {
-        console.log(err)
+        return false;
       })
   }
+
 
 
   fetchProfile = (userID) =>{
@@ -224,8 +246,11 @@ class App extends Component {
     })
   }
 
-  registerProfile = (firstName, lastName, email, password) => {
-    fetch('http://localhost:3000/register', {
+  
+  
+  registerProfile = async (firstName, lastName, email, password) => {
+    console.log("you have entered registerProfile in AppJS")
+    return await fetch('http://localhost:3000/register', {
       method: 'post',
       headers: {'Content-Type' : 'application/json'},
       body: JSON.stringify({
@@ -236,12 +261,14 @@ class App extends Component {
       })
     })
     .then(data => {
+      console.log("inside the promise in AppJS")
       if(data.status == 200){
         this.fetchUserList();
         this.switchUserDetailsView(); 
         
 
       }else if(data.status == 499){
+        console.log("checked and email already in database. Throwing error")
         throw "EMAIL ALREADY IN DATABASE";
 
       } else{
@@ -252,12 +279,14 @@ class App extends Component {
     .then(data=> {console.log("this is the data", data)})
     .catch(err=>{
       if(err == "EMAIL ALREADY IN DATABASE"){
+        console.log("Returning Email-Used. Should be running before checkRegistrationInputs ends")
         return "Email-Used";
       }else{
         return "Could-Not-Register";
       }
     })
   }
+
 
   
 
@@ -295,7 +324,7 @@ class App extends Component {
         ) : (
           !this.state.profileView ? ( 
             <CardList 
-              robotsList={this.state.robotsList} 
+              usersList={this.state.usersList} 
               switchProfileView={this.switchProfileView}
               fetchProfile={this.fetchProfile}/>
           ) : (

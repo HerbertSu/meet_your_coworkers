@@ -14,6 +14,7 @@ class Login extends Component {
         }
     }
 
+
     setSignInEmail = (event) =>{
         this.setState( {signInEmail : event.target.value});
     }
@@ -40,9 +41,31 @@ class Login extends Component {
         }
     }
 
-    checkSignIn = (email,password) =>{
+
+    /*
+        Below, I am attempting to have react show an error message if the login email does not exist in the database.
+    This means the front end has to ask the server to check with the database to see if the given email
+    exists in the database. The database then responds to the server, which then responds to the 
+    front-end. Since I will need to use a fetch() function (which is a Promise) that lives in 
+    App.js (the parent of Login.js), I ran into an issue where the code in Login.js would finish running
+    before my fetch in App.js finished. Login.js then wouldn't show an error message because it wouldn't 
+    know if there was an error or not. Instead, emailErr was 'undefined'.
+    
+    To solve this, I had to make sure authenticateUser() ran completely in App.js before it finshed and reentered
+    checkSignIn. This was done by making both checkSignIn() and authenticateUser() 
+    asynchronous, while making everything inside authenticateUser() synchronous. The latter part was achieved by
+    adding the "await" keyword in front of the fetch() inside authenticateUser(), which forces JS to wait until
+    fetch() finishes before moving on with the rest of authenticateUser()
+    */
+    checkSignIn = async (email,password) =>{
         if(this.checkSignInEmail(email) && this.checkSignInPassword(password)){
-           this.props.authenticateUser(email, password) 
+           let emailErr = await this.props.authenticateUser(email, password);
+           if(emailErr == false ){
+               console.log("THE RESULT", emailErr);
+               this.setState({signInErrorMsg :"Invalid email or password"})
+           } else{
+                this.setState({signInErrorMsg :""})
+           }
         }
     }
 
