@@ -18,9 +18,8 @@ const postgres = knex({
 
 app.use( cors(), bodyParser.json());
 
-//TODO when we add a "Change User Details" button, make sure that when someone signs in, their userId gets saved to focusedUserID
 let focusedUserID = "";
-let robotsList = [];
+let usersList = [];
 
 app.get('/', (req, res) => {
     res.send({"hi":"this is working"})
@@ -33,7 +32,7 @@ app.get('/userList', (req,res) => {
                 .join('user_details', 'users.userid', '=', 'user_details.userid')
                 .then(data => {
                     res.json({
-                        robots: data
+                        users: data
                     });
                 })
                 .catch((err)=>{
@@ -76,9 +75,9 @@ app.post('/login', (req, res) => {
                                     .join('user_details', 'users.userid', '=', 'user_details.userid')
                                     .then(data => {
                                         res.json({
-                                            robots: data
+                                            users: data
                                         });
-                                        robotsList = data; 
+                                        usersList = data; 
                                     })
                                     .catch((err)=>{
                                         res.status(404).send()
@@ -112,7 +111,7 @@ app.post('/profile', (req, res) => {
                         throw "User not found";
                     }else{
                         res.json({
-                            robot: data[0]
+                            user: data[0]
                         })
                     }
                 })
@@ -195,18 +194,9 @@ app.post('/setUserDetails', (req,res) => {
             .into('user_details')
             .where('userid', "=", String(focusedUserID)) 
             .returning("*")
-            .then(data => console.log("Here are the details: ",data))
-            .then(()=>{
-                console.log("This ran")
-            })
-            // .returning("userid")
-            // .then(userid => {
-            //     console.log("focusedUserID ", focusedUserID)
-            //     console.log("userid ", userid)
-            // })
             .catch(() => {
                 console.log("Could not change user details")
-                errorExists = true
+                errorExists = true;
             });
     if(errorExists){
         res.status(404).send(false); //unsuccessful
@@ -255,19 +245,8 @@ app.post('/register', (req, res) => {
                             })
                         })
                 })
-                .then( () =>{
-                    return trx.select('*')
-                        .from('users')
-                        .join('user_details', 'users.userid', '=', 'user_details.userid')
-                        .then(data => {
-                            res.json({
-                                robots: data
-                            });
-                            robotsList = data; 
-                        })
-                        .catch((err) => {
-                            console.log("Could not retrieve users in /register", err)
-                        })
+                .then(()=> {
+                    res.send("Successful")      //Post seems to need to send something to complete.
                 })
                 .then(trx.commit)
                 // .then(()=>{
