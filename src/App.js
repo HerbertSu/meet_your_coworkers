@@ -75,7 +75,6 @@ import UserDetails from './components/UserDetails/UserDetails.js'
       //Issues with changing in CardList is that it is asynchronous and I am trying to use a variable 
       //populated by fetch before fetch actually gets a chance to run
   
-  
 
 
 
@@ -150,16 +149,18 @@ class App extends Component {
   }
 
 
-
+  //Fetches a list of users and their details in our database. The list's elements are json objects
   fetchUserList = () =>{
     return fetch('http://localhost:3000/userList')
       .then(response=> response.json())
       .then(data => {
-        this.setUsersList(data.robots);
+        this.setUsersList(data.users);
       })
   }
 
 
+  //Authenticates the user's email and password by contacting the backend.
+  //Used in Login.js
   authenticateUser = async (loginEmail, loginPassword) => {
 
     return await fetch('http://localhost:3000/login', {
@@ -170,25 +171,26 @@ class App extends Component {
         password: loginPassword
       })
     }).then(response=> {
-      if(String(response.status) === "200"){  
 
+      if(String(response.status) === "200"){
+        //Set the focusId state variable to the user logging in
         fetch('http://localhost:3000/focusedUserID')
           .then( response => response.json())
           .then( data => {
             this.setFocusId(String(data.focusedUserID))
           })
-          .catch( (err) => {console.log("failed: ", err)})
-        
+          .catch( (err) => {throw "Unable to fetch this user"})
         return response.json()  // response.json() is a Promise
       } else {
-        throw("Something went wrong")
+        throw("Unable to log in.")
         return false;
       }
     })
-      .then(data => { 
+      .then(data => {
+        //If the login credentials are correct, the backend should return a list of users 
         if(data){
           this.switchLogin();
-          this.setUsersList(data.robots);
+          this.setUsersList(data.users);
           return true;
         }
       })
@@ -198,7 +200,7 @@ class App extends Component {
   }
 
 
-
+  //Fetch a user's profile from the backend if given their userID
   fetchProfile = (userID) =>{
     fetch('http://localhost:3000/profile', {
       method: 'post',
@@ -209,12 +211,13 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data =>{
-        this.setUser(data.robot);
+        this.setUser(data.user);
     })
   }
 
+  //Method for changing a user's details
   changeUserDetails = (joinDate, batch, techTrained, techInterest, tv, hobbies, currentProject, previousProjects) =>{
-    //response will be userid if successful or false if an error occurred
+    //Response will be the user's userid if successful or false if an error occurred
     fetch('http://localhost:3000/setUserDetails', {
       method: 'post',
       headers: {'Content-Type' : 'application/json'},
@@ -234,9 +237,9 @@ class App extends Component {
     })
     .then(response => {
       if(response.status == 404){
-        console.log("Failed")
+        console.log("Failed to update user details")
+        throw "Failed to update user details";
       }else{
-
         this.setFocusId(response.focusedUserID)
         if(this.state.login == false){
           this.switchLogin(); //Turn login to true to signify that the user is logged in.
@@ -247,9 +250,8 @@ class App extends Component {
   }
 
   
-  
+  //Method for registering a new user profile
   registerProfile = async (firstName, lastName, email, password) => {
-    console.log("you have entered registerProfile in AppJS")
     return await fetch('http://localhost:3000/register', {
       method: 'post',
       headers: {'Content-Type' : 'application/json'},
@@ -261,25 +263,22 @@ class App extends Component {
       })
     })
     .then(data => {
-      console.log("inside the promise in AppJS")
+      //Successful case
       if(data.status == 200){
         this.fetchUserList();
-        this.switchUserDetailsView(); 
-        
-
-      }else if(data.status == 499){
-        console.log("checked and email already in database. Throwing error")
+        this.switchUserDetailsView();  
+      }else if(data.status == 499){   //A specific unsuccessful case
+        /*
+          A response-status of 499 from the server has been hard-coded to represent that
+          the email used in registration already exists in the database.
+        */
         throw "EMAIL ALREADY IN DATABASE";
-
-      } else{
+      } else{                         //All other unsuccessful case
         throw "Could not insert into database";
       }
     })
-    .then(response => response.json())
-    .then(data=> {console.log("this is the data", data)})
     .catch(err=>{
       if(err == "EMAIL ALREADY IN DATABASE"){
-        console.log("Returning Email-Used. Should be running before checkRegistrationInputs ends")
         return "Email-Used";
       }else{
         return "Could-Not-Register";

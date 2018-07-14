@@ -15,9 +15,9 @@ class Card extends Component {
                                     <p className="b element">Name: </p> <div style={{overflow:"hidden",maxWidth:"15em", width:"15em", height: "2em"}} className="element">{this.props.name} </div>
                                     <p className="b element">Email: </p> <div className="element" style={{overflow:"hidden",maxWidth:"15em", width:"15em", height: "2em"}}> {this.props.email} </div>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <div className="b element"> Batch: </div> <div style={{overflow:"hidden",maxWidth:"20em", width:"15em", height: "2em"}} className="element">Milwakuee, WI Oct 2017</div> 
-                                </div>
+                                </div> */}
                             </div>
                                 
                         </div>
