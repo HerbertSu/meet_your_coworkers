@@ -4,10 +4,13 @@ const fs = require('fs');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require('knex');
+
 const userList = require('./controllers/userList.js');
 const focusedUserIDFunction = require('./controllers/focusedUserIDFunction.js');
 const login = require('./controllers/login.js')
-
+const profile = require('./controllers/profile.js');
+const checkEmail = require('./controllers/checkEmail.js');
+const setUserDetails = require('./controllers/setUserDetails.js');
 
 const app = express();
 const postgres = knex({
@@ -25,137 +28,37 @@ app.use( cors(), bodyParser.json());
 let focusedUserID = "";
 let usersList = [];
 
-// app.get('/', (req, res) => {
-//     res.send({"hi":"this is working"})
-// })
+//TODO
+//When everything is in one file, everything works. However, when trying to update focusedUserID or usersList in separate
+    //files, these changes are not reflected back here. This proves to be a problem when we want to send
+    //the values of these variables to the front-end
 
 
-app.get('/userList', (req, res) => {userList.handleUserList(req, res, postgres)})
+app.get('/userList', (req, res) => {userList.handleUserList(req, res, postgres)});
 
-app.get('/focusedUserID', (req,res) => {focusedUserIDFunction.handleFocusedUserID(req, res)})
+app.get('/focusedUserID', (req,res) => {focusedUserIDFunction.handleFocusedUserID(req, res, focusedUserID)});
 
-app.post('/login', (req, res) => {login.handleLogin(req, res, postgres, bcrypt)})
+app.post('/login', (req, res) => {
+    focusedUserID = login.focusedUserID;
+    return login.handleLogin(req, res, postgres, bcrypt);
+});
 
+app.post('/profile', (req, res) => {profile.handleProfile(req, res, postgres)});
 
-app.post('/profile', (req, res) => {
-    const userId = req.body.id;
-    let user = {};
-    try{
-        postgres.select('*')
-                .from('users')
-                .join('user_details', 'users.userid', '=', 'user_details.userid')
-                .where('users.userid', "=", String(userId)) 
-                .then( data => {
+app.post('/checkEmail', (req, res) => {checkEmail.handleCheckEmail(req, res, postgres)});
 
-                    if (data === undefined || data.length == 0) {
-                        throw "User not found";
-                    }else{
-                        res.json({
-                            user: data[0]
-                        })
-                    }
-                })
-        
+app.post('/setUserDetails', (req, res) => {setUserDetails.handleSetUserDetails(req, res, postgres, focusedUserID)});
 
-        
-        // robotsList.some( (robot) => {
-        //     if (String(robot.userid) === String(userId)){
-        //         res.json({
-        //             robot: robot
-        //         });
-        //         return user = robot;
-        //     }
-        // }) 
-
-        // if(Object.keys(user).length === 0 && user.constructor === Object){
-        //     throw "User not found";
-        // }
-    } catch(err){
-        res.status(404).send(err);
-    }
-})
-
-
-
-app.post('/checkEmail', (req, res) =>{
-    const {email} = req.body;
-    
-    postgres.transaction( trx=>{
-        trx.insert({
-            useremail:email
-        })
-        .into('users')
-        .catch((err) => {
-            if(err.constraint === "users_useremail_key"){
-                res.status(299).send(false);
-            }
-            return trx.rollback;
-        })
-
-        .then(()=>{
-            res.status(200).send(true);
-            return trx.rollback})
-    })
-
-})
-
-
-
-
-app.post('/setUserDetails', (req,res) => {
-    //what if values are empty? 
-        //Answer: the update method automatically ignores undefined values
-    //No username field needed. Just have screen say "Hello __firstName"
-    //Might have to make sure that the date format of the input is the same as that
-        //accepted by postgresql
-    
-    let errorExists = false;
-    const {joinDate, 
-        batch, 
-        techTrained, 
-        techInterest, 
-        tv, 
-        hobbies, 
-        currentProject, 
-        previousProjects
-    }
-    = req.body;
-    console.log(req.body);
-    postgres.update({
-                batch : batch,
-                batch_tech: techTrained,
-                tech_interested_in : techInterest,
-                favorite_tv : tv,
-                hobbies : hobbies,
-                current_project : currentProject,
-                previous_projects : previousProjects,
-                joining_date : joinDate
-            })
-            .into('user_details')
-            .where('userid', "=", String(focusedUserID)) 
-            .returning("*")
-            .catch(() => {
-                console.log("Could not change user details")
-                errorExists = true;
-            });
-    if(errorExists){
-        res.status(404).send(false); //unsuccessful
-    }else{
-        res.json({focusedUserID: focusedUserID}) //successful
-    }
-})
-
-
+// app.post('/register', (req, res) => {register.handleRegister(req, res, bcrypt, postgres, focusedUserID)});
 
 app.post('/register', (req, res) => {
 
-    
     const { firstName,lastName,email,password } = req.body;
 
     bcrypt.hash(password, null, null, function(err, result) {
 
         postgres.transaction( trx => {
-        
+    
             try{
                 
                 trx.insert({

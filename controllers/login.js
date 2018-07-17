@@ -1,8 +1,9 @@
 //Checks the login credentials given by the front-end against the ones stored in the database
+let focusedUserID = "";
 const handleLogin = (req, res, postgres, bcrypt) => {
 
     const {email, password} = req.body;
-        
+
     postgres.select('*')
             .from('users')
             .where({
@@ -44,5 +45,6 @@ const handleLogin = (req, res, postgres, bcrypt) => {
 }
 
 module.exports = {
-    handleLogin : handleLogin
+    handleLogin : handleLogin,
+    focusedUserID : focusedUserID
 }

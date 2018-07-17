@@ -1,5 +1,5 @@
 //Fetches the user ID of the one currently logged in
-const handleFocusedUserID = (req, res) => {
+const handleFocusedUserID = (req, res, focusedUserID) => {
     if(focusedUserID){
         res.json({
             focusedUserID : focusedUserID
