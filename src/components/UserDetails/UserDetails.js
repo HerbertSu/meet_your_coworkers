@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 
+//Component for changing a user's details
 class UserDetails extends Component {
     constructor(props){
         super(props);
@@ -16,7 +17,8 @@ class UserDetails extends Component {
             previousProjects : undefined
         }
     }
-
+    
+    //Setter functions for state variables
     setImageURL = (event) => {
         this.setState({imageURL : event.target.value})
     }
@@ -60,46 +62,86 @@ class UserDetails extends Component {
                 <div className = "flex pa4 justify-center" >
                     <div className="pr5">
                         <div>
-                            <img className="ba bw1 br2" alt="404 Phot not found." src="http://podkarpackie.regiopedia.pl/sites/default/files/imagecache/200x200/sites/all/themes/regiopedia_theme/img/no_sprite/default-avatar.png" height="200px" width="auto"/>
+                            <img className="ba bw1 br2" alt="404 Phot not found." 
+                                src="http://podkarpackie.regiopedia.pl/sites/default/files/imagecache/200x200/sites/all/themes/regiopedia_theme/img/no_sprite/default-avatar.png" 
+                                height="200px" width="auto"/>
                             {/* <img className="ba bw1 br2" alt="404 Phot not found." src="https://media.glamour.com/photos/5a425fd3b6bcee68da9f86f8/master/w_644,c_limit/best-face-oil.png" height="200px" width="auto"/> */}
                         </div>
+
                         <div className="ba dib pa2 br3 bw1 shadow-5 ">
                             <input type="file" name="pic" accept="image/*" onChange={this.setImageURL}/>
                         </div>
                     </div>
+
                     <div className="flex flex-column pl5 justify-around">
                         <div className="flex justify-between">
-                            Joining Date: <input type={"text"} onChange={this.setJoinDate} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black"/>
+                            Joining Date: <input type={"text"} 
+                                                onChange={this.setJoinDate} 
+                                                className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black"
+                                            />
                         </div>
+                        
                         <div className="flex justify-between">
-                            Batch: <input type={"text"} onChange={this.setBatch} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Batch: <input type={"text"} 
+                                        onChange={this.setBatch} 
+                                        className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                    />
                         </div>
+
                         <div className="flex justify-between">
-                            Technologies Trained In: <input type={"text"} onChange={this.setTechTrained} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Technologies Trained In: <input type={"text"} 
+                                                            onChange={this.setTechTrained} 
+                                                            className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                                        />
                         </div>
+
                         <div className="flex justify-between">
-                            Technologies I'm Interested In: <input type={"text"} onChange={this.setTechInterest} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Technologies I'm Interested In: <input type={"text"} 
+                                                                    onChange={this.setTechInterest} 
+                                                                    className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                                                />
                         </div>
+                        
                         <div className="flex justify-between">
-                            Favorite TV Series: <input type={"text"} onChange={this.setTV} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Favorite TV Series: <input type={"text"} 
+                                                        onChange={this.setTV} 
+                                                        className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                                    />
                         </div>
+
                         <div className="flex justify-between">
-                            Hobbies: <input type={"text"} onChange={this.setHobbies} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Hobbies: <input type={"text"} 
+                                            onChange={this.setHobbies} 
+                                            className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                        />
                         </div>
+                        
                         <div className="flex justify-between">
-                            Current Project: <input type={"text"} onChange={this.setCurrentProject} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Current Project: <input type={"text"} 
+                                                    onChange={this.setCurrentProject} 
+                                                    className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                                />
                         </div>
+
                         <div className="flex justify-between">
-                            Previous Projects: <input type={"text"} onChange={this.setPreviousProjects} className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "/>
+                            Previous Projects: <input type={"text"} 
+                                                        onChange={this.setPreviousProjects} 
+                                                        className="br3 bw1 input-reset ba bg-transparent hover-bg-blue hover-black "
+                                                />
                         </div>
                     </div>
                 </div>
+
                 <div className="tc pa4">
                     <button onClick={() => {
-                        this.props.changeUserDetails(this.state.joinDate, this.state.batch, 
-                            this.state.techTrained, this.state.techInterest, 
-                            this.state.tv, this.state.hobbies, 
-                            this.state.currentProject, this.state.previousProjects)}}> 
+                        this.props.changeUserDetails(this.state.joinDate, 
+                            this.state.batch, 
+                            this.state.techTrained, 
+                            this.state.techInterest, 
+                            this.state.tv, 
+                            this.state.hobbies, 
+                            this.state.currentProject, 
+                            this.state.previousProjects)}}> 
                         Submit
                     </button>
                 </div>

@@ -3,6 +3,7 @@ import InputError from '../Register/InputError.js';
 import plantWall from '../../images/infosys_plant_wall.JPG';
 import './Login.css';
 
+//Component for the login page
 class Login extends Component {
 
     constructor(props){
@@ -14,7 +15,7 @@ class Login extends Component {
         }
     }
 
-
+    //Setter functions for the state variables
     setSignInEmail = (event) =>{
         this.setState( {signInEmail : event.target.value});
     }
@@ -23,6 +24,8 @@ class Login extends Component {
         this.setState( {signInPassword : event.target.value});
     }
     
+
+    //Front-end functions for checking the user's inputs 
     checkSignInEmail = (email) =>{
         if(!email){
             this.setState({signInErrorMsg: "Invalid email or password"})
@@ -61,7 +64,6 @@ class Login extends Component {
         if(this.checkSignInEmail(email) && this.checkSignInPassword(password)){
            let emailErr = await this.props.authenticateUser(email, password);
            if(emailErr == false ){
-               console.log("THE RESULT", emailErr);
                this.setState({signInErrorMsg :"Invalid email or password"})
            } else{
                 this.setState({signInErrorMsg :""})
@@ -110,11 +112,12 @@ class Login extends Component {
                                 <div className="gold">
                                     {this.state.signInErrorMsg ? ( 
                                         <InputError errorMsg={this.state.signInErrorMsg}/>
-                                    ) : (
+                                    ):(
                                         <div>&nbsp;</div>
                                     )} 
                                 </div>
                             </fieldset>
+
                             <div className="">
                                 <input 
                                     className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
@@ -123,10 +126,14 @@ class Login extends Component {
                                     onClick={() =>{ 
                                         this.checkSignIn(this.state.signInEmail, this.state.signInPassword)
                                     }}
-                                    />
+                                />
                             </div>
+
                             <div className="lh-copy mt3">
-                                <p className="f6 pointer link dim black db" onClick={() => switchRegister()}>Register</p>
+                                <p className="f6 pointer link dim black db" 
+                                    onClick={() => switchRegister()}>
+                                    Register
+                                </p>
                             </div>
                         </div>
                     </main>

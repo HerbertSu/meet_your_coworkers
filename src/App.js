@@ -74,7 +74,9 @@ import UserDetails from './components/UserDetails/UserDetails.js'
     //whenever it wants user information
       //Issues with changing in CardList is that it is asynchronous and I am trying to use a variable 
       //populated by fetch before fetch actually gets a chance to run
-  
+  //If you're on your own user details page and you change your details, once you submit it you'll 
+    //return to your user details page and it won't be updated. If you go back to the card list page
+    //and then select your profile again, it will be updated then.
 
 
 
@@ -292,6 +294,7 @@ class App extends Component {
   render() {
 
     return (
+      // Header will always be visible, but its contents may vary with each page
       <div className="">
         <Header onLogout={this.onLogout} 
                 login={this.state.login} 
@@ -299,51 +302,55 @@ class App extends Component {
                 userDetailsView={this.state.userDetailsView}
         />
 
+
         {this.state.userDetailsView ? (
-          <UserDetails changeUserDetails={this.changeUserDetails}/>
-          
-          ) : (
-            
-        !this.state.login ? (
-          !this.state.registerView ? (
-            <div>
-              <Login 
-                switchLogin={this.switchLogin} 
-                authenticateUser={this.authenticateUser}
-                fetchLogin={this.fetchLogin}
-                switchRegister={this.switchRegister}
-              />
-            </div>
-          ) : (
-            <Register 
-              registerProfile={this.registerProfile}
-              switchRegister={this.switchRegister}
-            />
-          )
-        ) : (
-          !this.state.profileView ? ( 
-            <CardList 
-              usersList={this.state.usersList} 
-              switchProfileView={this.switchProfileView}
-              fetchProfile={this.fetchProfile}/>
-          ) : (
-            <div >
-              <div className="flex justify-end pa2">
-                <button  onClick={() => {this.switchProfileView()}}>
-                  Back
-                </button>
-              </div>
-              <div className="pt5 pl5 pr5 pb5">
-                  <Profile user={this.state.user}/>
-              </div>
-            </div>
+          <UserDetails 
+            changeUserDetails={this.changeUserDetails}
+          />
+          ):(
+            !this.state.login ? ( //Check if any user is logged in (ie login == false)
+              //If no user is no logged in, check if the website should be on the registration page
+              !this.state.registerView ? (  //If the registration page is false, load the Login component
+                  <div>
+                    <Login 
+                      switchLogin={this.switchLogin} 
+                      authenticateUser={this.authenticateUser}
+                      fetchLogin={this.fetchLogin}
+                      switchRegister={this.switchRegister}
+                    />
+                  </div>
+                ):( //If the registration page is true, load the Register component
+                  <Register 
+                    registerProfile={this.registerProfile}
+                    switchRegister={this.switchRegister}
+                  />
+                )
+            ):(   /*
+                    If a user is logged in, check if we are listing all of the employee cards, or if 
+                    the user has clicked on someone's profile and entered the "profileView"
+                  */
+              !this.state.profileView ? ( //If the user has not entered the profileView, show the list of employee cards
+                <CardList 
+                  usersList={this.state.usersList} 
+                  switchProfileView={this.switchProfileView}
+                  fetchProfile={this.fetchProfile}
+                />
+              ):( //If the user has clicked on an employee's card to view their profile, show the profile
+                <div>
+                  <div className="flex justify-end pa2">
+                    <button  onClick={() => {this.switchProfileView()}}>
+                      Back
+                    </button>
+                  </div>
+
+                  <div className="pt5 pl5 pr5 pb5">
+                    <Profile user={this.state.user}/>
+                  </div>
+                </div>
               )
             )
-      )
-    }
-       
-
-        
+          )
+        } 
       </div>
     );
   }

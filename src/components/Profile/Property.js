@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
+//A component used in Profile.js for showing user details
 class Property extends Component {    
     render(){
         const {property, value} = this.props;
-        //create dictionary here HI THIS IS THE USER
         const propertiesDict = {
             batch : "Training Batch",
             batch_tech : "Technology Trained in My Batch",

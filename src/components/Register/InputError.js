@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 
+//Component used in Register.js for displaying error messages
 class InputError extends Component {
     
     constructor(props){
         super(props);
-        this.state = {
-
-        };
     }
 
     render(){

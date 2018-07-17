@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import InputError from './InputError.js'
 import plantWall from '../../images/infosys_plant_wall.JPG';
 
+
+//Component for user registration page 
 class Register extends Component {
 
     constructor(props){
@@ -16,9 +18,9 @@ class Register extends Component {
             passwordErrorMsg: "",
             emailErrorMsg: ""
         }
-        
     }
 
+    //Setter function for state variables
     setRegisterEmail = (event) =>{
         this.setState( {registerEmail : event.target.value});
     }
@@ -35,6 +37,7 @@ class Register extends Component {
         this.setState( {lastName : event.target.value});
     }
     
+    //Front-end functions for checking user inputs
     checkStringForNumbers = (input) =>{
         let str = String(input);
         for( let i = 0; i < str.length; i++){
@@ -177,7 +180,6 @@ class Register extends Component {
 
 
     render(){
-
         return(
             <div className="flex">
                 <img alt="Infosys: Navigate Your Next" 
@@ -194,6 +196,7 @@ class Register extends Component {
                                 <legend className="f1 fw6 ph0 mh0">Register</legend>
                                 <div className="mt2 ">
                                     <label className="db fw6 lh-copy f6" >First Name</label>
+                                    
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                         type="text" 
@@ -201,16 +204,19 @@ class Register extends Component {
                                         id="first_name"
                                         onChange={this.setFirstName}
                                     />  
+                                    
                                     <div className="gold">
                                         {this.state.fNameErrorMsg !== "" ? ( 
                                             <InputError errorMsg={this.state.fNameErrorMsg}/>
-                                        ) : (
+                                        ):(
                                             <div>&nbsp;</div>
                                         )} 
                                     </div>
                                 </div>
+                                
                                 <div className="mt2">
                                     <label className="db fw6 lh-copy f6" >Last Name</label>
+                                    
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                         type="text" 
@@ -218,16 +224,19 @@ class Register extends Component {
                                         id="last_name"
                                         onChange={this.setLastName}
                                     />
+                                    
                                     <div className="gold">
                                         {this.state.lNameErrorMsg !== "" ? ( 
                                             <InputError errorMsg={this.state.lNameErrorMsg}/>
-                                        ) : (
+                                        ):(
                                             <div>&nbsp;</div>
                                         )} 
                                     </div>
                                 </div>
+                                
                                 <div className="mt2">
                                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
+                                    
                                     <input 
                                         className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                         type="email" 
@@ -235,10 +244,11 @@ class Register extends Component {
                                         id="email-address"
                                         onChange={this.setRegisterEmail}
                                     />
+                                    
                                     <div className="gold">
                                         {this.state.emailErrorMsg ? ( 
                                             <InputError errorMsg={this.state.emailErrorMsg}/>
-                                        ) : (
+                                        ):(
                                             <div>&nbsp;</div>
                                         )}
                                     </div>
@@ -246,6 +256,7 @@ class Register extends Component {
                                 </div>
                                 <div className="mv2">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
+                                    
                                     <input 
                                         className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                         type="password" 
@@ -253,29 +264,35 @@ class Register extends Component {
                                         id="password"
                                         onChange={this.setRegisterPassword}
                                     />
+                                    
                                     <div className="gold">
                                         {this.state.passwordErrorMsg ? ( 
                                             <InputError errorMsg={this.state.passwordErrorMsg}/>
-                                        ) : (
+                                        ):(
                                             <div>&nbsp;</div>
                                         )} 
                                     </div>
-                                </div>
-                                
+                                </div>    
                             </fieldset>
+                            
                             <div className="">
                                 <input 
                                     className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                                     type="submit" 
                                     value="Register"
                                     onClick={() =>{ 
-                                        this.checkRegistrationInputs(this.state.firstName, this.state.lastName, this.state.registerEmail, this.state.registerPassword)
+                                        this.checkRegistrationInputs(this.state.firstName, 
+                                                                    this.state.lastName, 
+                                                                    this.state.registerEmail, 
+                                                                    this.state.registerPassword)
                                     }}
                                     />
 
-                            <div className="lh-copy">
-                                <p className="f6 pointer link dim black db" onClick={() => this.props.switchRegister()}>Back to Sign In</p>
-                            </div>
+                                <div className="lh-copy">
+                                    <p className="f6 pointer link dim black db" onClick={() => this.props.switchRegister()}>
+                                        Back to Sign In
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </main>

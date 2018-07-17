@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Property from './Property.js';
 
+//Profile component that contains the details of the card the user clicked
 class Profile extends Component {    
     
     render(){
@@ -8,17 +9,15 @@ class Profile extends Component {
 
         delete user["key"];
 
+        //Create an array of objects of the selected user's details. Each element is an object {property: value}
         let key_value_pairs = Object.entries(user);
-
         let properties = key_value_pairs.map( (array) => {
             var newObj = {};
                 newObj[array[0]] = array[1];
             return newObj;
         })
         
-
-
-        
+        //Remove the objects with no values
         for (let i = 0; i <properties.length; i++){
             let value = properties[i][Object.keys(properties[i])[0]];
             if(!value || value === null || value === ""){             
@@ -27,6 +26,7 @@ class Profile extends Component {
             }
         }
         
+        //Create a list of the properties
         const propertyComponent = properties.map((element) => {
             return(
                 <div>
@@ -43,13 +43,6 @@ class Profile extends Component {
                     {propertyComponent}
                 </div>
 
-                {/* 
-                    <div className="flex justify-start pl4 pt1 pb1">
-                        Favorite Movie: The Curious Case of Benjamin Button 
-                    </div>
-                    <div className="flex justify-start pl4 pt1 pb1">
-                        Favorite Song: "Electric Love" by B0rns
-                    */}
             </div>
         )
     }
