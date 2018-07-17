@@ -4,6 +4,10 @@ const fs = require('fs');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require('knex');
+const userList = require('./controllers/userList.js');
+const focusedUserIDFunction = require('./controllers/focusedUserIDFunction.js');
+const login = require('./controllers/login.js')
+
 
 const app = express();
 const postgres = knex({
@@ -21,80 +25,16 @@ app.use( cors(), bodyParser.json());
 let focusedUserID = "";
 let usersList = [];
 
-app.get('/', (req, res) => {
-    res.send({"hi":"this is working"})
-})
+// app.get('/', (req, res) => {
+//     res.send({"hi":"this is working"})
+// })
 
 
-app.get('/userList', (req,res) => {
-    
-    postgres.select('*').from('users')
-                .join('user_details', 'users.userid', '=', 'user_details.userid')
-                .then(data => {
-                    res.json({
-                        users: data
-                    });
-                })
-                .catch((err)=>{
-                    res.status(404).send("Incorrect username or password")
-                })
+app.get('/userList', (req, res) => {userList.handleUserList(req, res, postgres)})
 
-})
+app.get('/focusedUserID', (req,res) => {focusedUserIDFunction.handleFocusedUserID(req, res)})
 
-
-app.get('/focusedUserID', (req,res) => {
-    if(focusedUserID){
-        res.json({
-            focusedUserID : focusedUserID
-        });
-    }else{
-        res.status(404).send(false);
-    }
-})
-
-app.post('/login', (req, res) => {
-    const {email, password} = req.body;
-        
-    postgres.select('*')
-            .from('users')
-            .where({
-                useremail : email
-                })
-            .then(data => { 
-                focusedUserID = data[0].userid;
-                console.log(focusedUserID);
-                postgres.select('hash')
-                    .from('login')
-                    .where({
-                        userid : data[0].userid
-                    })
-                    .then(hashedPass=> {
-                        bcrypt.compare(password, hashedPass[0].hash, function(err, result){
-                            if(result){
-                                postgres.select('*').from('users')
-                                    .join('user_details', 'users.userid', '=', 'user_details.userid')
-                                    .then(data => {
-                                        res.json({
-                                            users: data
-                                        });
-                                        usersList = data; 
-                                    })
-                                    .catch((err)=>{
-                                        res.status(404).send()
-                                    })
-                            }else{
-                                res.status(404).send()
-                            }
-                        });
-                    })
-                    .catch( (err) =>{
-                        res.status(404).send()
-                    })
-            })
-            .catch( (err) => {
-                res.status(404).send()
-            });
-})
+app.post('/login', (req, res) => {login.handleLogin(req, res, postgres, bcrypt)})
 
 
 app.post('/profile', (req, res) => {
