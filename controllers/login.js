@@ -1,10 +1,10 @@
 //Checks the login credentials given by the front-end against the ones stored in the database
 let focusedUserID = "";
-const handleLogin = (req, res, postgres, bcrypt) => {
+const handleLogin = async (req, res, postgres, bcrypt) => {
 
     const {email, password} = req.body;
 
-    postgres.select('*')
+    await postgres.select('*')
             .from('users')
             .where({
                 useremail : email
@@ -25,7 +25,6 @@ const handleLogin = (req, res, postgres, bcrypt) => {
                                         res.json({
                                             users: data
                                         });
-                                        usersList = data; 
                                     })
                                     .catch((err)=>{
                                         res.status(404).send()
@@ -44,7 +43,10 @@ const handleLogin = (req, res, postgres, bcrypt) => {
             });
 }
 
+const returnLogin= async (req, res, postgres, bcrypt, usersList) => {
+    await handleLogin(req, res, postgres, bcrypt, usersList);
+    return focusedUserID;
+}
 module.exports = {
-    handleLogin : handleLogin,
-    focusedUserID : focusedUserID
+    returnLogin : returnLogin
 }

@@ -1,10 +1,14 @@
 //Registers a new user by saving their details in the database
+let focusedUserID = "";
+
 const handleRegister = (req, res, bcrypt, postgres, focusedUserID) => {
     
     const { firstName, lastName, email, password } = req.body;
 
-    bcrypt.hash(password, null, null, function(err, result) {
-        postgres.transaction( trx => {
+    console.log("handleRegister before bcrypt")
+    // const emptyPromise = new Promise((resolve, reject) => {
+    bcrypt.hash(password, null, null, async function(err, result) {
+        await postgres.transaction( trx => {
             try{
                 trx.insert({
                     useremail:email
@@ -20,7 +24,9 @@ const handleRegister = (req, res, bcrypt, postgres, focusedUserID) => {
                         .returning("userid")
                         .then(userid => {
                             //To be used in /setUserDetails after a user has registered
+                           
                             focusedUserID = String(userid);
+                            console.log("Setting focusedUserID to ", focusedUserID )
                             return trx.insert({
                                 userid: parseInt(userid),
                                 first_name: firstName,
@@ -50,8 +56,19 @@ const handleRegister = (req, res, bcrypt, postgres, focusedUserID) => {
             }  
         }); 
     });
+//     resolve("Done");
+// });
+}
+
+
+const returnRegister = async (req, res, bcrypt, postgres, focusedUserID) => {
+    console.log("before returnRegister - focusedUserID in register.js", focusedUserID);
+    await handleRegister(req, res, bcrypt, postgres, focusedUserID);
+    
+    console.log("after returnRegister - focusedUserID in register.js", focusedUserID);
+    return focusedUserID;
 }
 
 module.exports = {
-    handleRegister : handleRegister
+    returnRegister : returnRegister
 }

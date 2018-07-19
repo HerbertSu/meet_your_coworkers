@@ -11,6 +11,7 @@ const login = require('./controllers/login.js')
 const profile = require('./controllers/profile.js');
 const checkEmail = require('./controllers/checkEmail.js');
 const setUserDetails = require('./controllers/setUserDetails.js');
+const register = require('./controllers/register.js')
 
 const app = express();
 const postgres = knex({
@@ -26,7 +27,6 @@ const postgres = knex({
 app.use( cors(), bodyParser.json());
 
 let focusedUserID = "";
-let usersList = [];
 
 //TODO
 //When everything is in one file, everything works. However, when trying to update focusedUserID or usersList in separate
@@ -36,11 +36,15 @@ let usersList = [];
 
 app.get('/userList', (req, res) => {userList.handleUserList(req, res, postgres)});
 
-app.get('/focusedUserID', (req,res) => {focusedUserIDFunction.handleFocusedUserID(req, res, focusedUserID)});
+app.get('/focusedUserID', (req,res) => {
+    focusedUserIDFunction.handleFocusedUserID(req, res, focusedUserID)
+});
 
-app.post('/login', (req, res) => {
-    focusedUserID = login.focusedUserID;
-    return login.handleLogin(req, res, postgres, bcrypt);
+app.post('/login', async (req, res) => {
+    console.log("Before handleLogin ", focusedUserID);
+
+    focusedUserID = await login.returnLogin(req, res, postgres, bcrypt);
+    console.log("After handleLogin ", focusedUserID);
 });
 
 app.post('/profile', (req, res) => {profile.handleProfile(req, res, postgres)});
@@ -50,68 +54,73 @@ app.post('/checkEmail', (req, res) => {checkEmail.handleCheckEmail(req, res, pos
 app.post('/setUserDetails', (req, res) => {setUserDetails.handleSetUserDetails(req, res, postgres, focusedUserID)});
 
 // app.post('/register', (req, res) => {register.handleRegister(req, res, bcrypt, postgres, focusedUserID)});
+app.post('/register', async (req, res) => {
+    console.log("before register focusedUserID ", focusedUserID);
+    focusedUserId = await register.returnRegister(req, res, bcrypt, postgres, focusedUserID);
+    console.log("after register focusedUserID ", focusedUserID);
+});
 
-app.post('/register', (req, res) => {
+// app.post('/register', (req, res) => {
 
-    const { firstName,lastName,email,password } = req.body;
+//     const { firstName,lastName,email,password } = req.body;
 
-    bcrypt.hash(password, null, null, function(err, result) {
+//     bcrypt.hash(password, null, null, function(err, result) {
 
-        postgres.transaction( trx => {
+//         postgres.transaction( trx => {
     
-            try{
+//             try{
                 
-                trx.insert({
-                    useremail:email
-                })
-                .into('users')
-                .returning('userid')
-                .then( userid => {
-                    return trx.insert({
-                            userid: parseInt(userid),
-                            hash: result
-                        })
-                        .into('login') 
-                        .returning("userid")
-                        .then(userid => {
-                            //To be used in /setUserDetails after a user has registered
-                            focusedUserID = String(userid);
-                            return trx.insert({
-                                userid: parseInt(userid),
-                                first_name: firstName,
-                                last_name: lastName
-                            })
-                            .into('user_details')
-                        .catch(err =>{
-                            throw err;
-                            return res.status(404).send("could not insert")
-                            })
-                        })
-                })
-                .then(()=> {
-                    res.send("Successful")      //Post seems to need to send something to complete.
-                })
-                .then(trx.commit)
-                // .then(()=>{
-                //     res.send(true);
-                // })
-                .catch((err) => {
-                    if(err.constraint === "users_useremail_key"){
-                        res.status(499).send(false);
-                    }else{
-                        res.status(404).send(false);
-                    }
-                    return trx.rollback;
-                })
+//                 trx.insert({
+//                     useremail:email
+//                 })
+//                 .into('users')
+//                 .returning('userid')
+//                 .then( userid => {
+//                     return trx.insert({
+//                             userid: parseInt(userid),
+//                             hash: result
+//                         })
+//                         .into('login') 
+//                         .returning("userid")
+//                         .then(userid => {
+//                             //To be used in /setUserDetails after a user has registered
+//                             focusedUserID = String(userid);
+//                             return trx.insert({
+//                                 userid: parseInt(userid),
+//                                 first_name: firstName,
+//                                 last_name: lastName
+//                             })
+//                             .into('user_details')
+//                         .catch(err =>{
+//                             throw err;
+//                             return res.status(404).send("could not insert")
+//                             })
+//                         })
+//                 })
+//                 .then(()=> {
+//                     res.send("Successful")      //Post seems to need to send something to complete.
+//                 })
+//                 .then(trx.commit)
+//                 // .then(()=>{
+//                 //     res.send(true);
+//                 // })
+//                 .catch((err) => {
+//                     if(err.constraint === "users_useremail_key"){
+//                         res.status(499).send(false);
+//                     }else{
+//                         res.status(404).send(false);
+//                     }
+//                     return trx.rollback;
+//                 })
 
-            } catch(err) {
-                res.status(404).send("Could not insert for some reason");
-            }  
-        }); 
+//             } catch(err) {
+//                 res.status(404).send("Could not insert for some reason");
+//             }  
+//         }); 
           
-    });
+//     });
     
-})
+// })
 
 app.listen(3000);
 
