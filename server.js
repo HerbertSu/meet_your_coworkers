@@ -28,12 +28,6 @@ app.use( cors(), bodyParser.json());
 
 let focusedUserID = "";
 
-//TODO
-//When everything is in one file, everything works. However, when trying to update focusedUserID or usersList in separate
-    //files, these changes are not reflected back here. This proves to be a problem when we want to send
-    //the values of these variables to the front-end
-
-
 app.get('/userList', (req, res) => {userList.handleUserList(req, res, postgres)});
 
 app.get('/focusedUserID', (req,res) => {
@@ -41,10 +35,7 @@ app.get('/focusedUserID', (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
-    console.log("Before handleLogin ", focusedUserID);
-
     focusedUserID = await login.returnLogin(req, res, postgres, bcrypt);
-    console.log("After handleLogin ", focusedUserID);
 });
 
 app.post('/profile', (req, res) => {profile.handleProfile(req, res, postgres)});
@@ -53,74 +44,11 @@ app.post('/checkEmail', (req, res) => {checkEmail.handleCheckEmail(req, res, pos
 
 app.post('/setUserDetails', (req, res) => {setUserDetails.handleSetUserDetails(req, res, postgres, focusedUserID)});
 
-// app.post('/register', (req, res) => {register.handleRegister(req, res, bcrypt, postgres, focusedUserID)});
 app.post('/register', async (req, res) => {
-    console.log("before register focusedUserID ", focusedUserID);
-    focusedUserId = await register.returnRegister(req, res, bcrypt, postgres, focusedUserID);
-    console.log("after register focusedUserID ", focusedUserID);
+    let result = await register.returnRegister(req, res, bcrypt, postgres);
+    focusedUserID = result;
 });
 
-// app.post('/register', (req, res) => {
-
-//     const { firstName,lastName,email,password } = req.body;
-
-//     bcrypt.hash(password, null, null, function(err, result) {
-
-//         postgres.transaction( trx => {
-    
-//             try{
-                
-//                 trx.insert({
-//                     useremail:email
-//                 })
-//                 .into('users')
-//                 .returning('userid')
-//                 .then( userid => {
-//                     return trx.insert({
-//                             userid: parseInt(userid),
-//                             hash: result
-//                         })
-//                         .into('login') 
-//                         .returning("userid")
-//                         .then(userid => {
-//                             //To be used in /setUserDetails after a user has registered
-//                             focusedUserID = String(userid);
-//                             return trx.insert({
-//                                 userid: parseInt(userid),
-//                                 first_name: firstName,
-//                                 last_name: lastName
-//                             })
-//                             .into('user_details')
-//                         .catch(err =>{
-//                             throw err;
-//                             return res.status(404).send("could not insert")
-//                             })
-//                         })
-//                 })
-//                 .then(()=> {
-//                     res.send("Successful")      //Post seems to need to send something to complete.
-//                 })
-//                 .then(trx.commit)
-//                 // .then(()=>{
-//                 //     res.send(true);
-//                 // })
-//                 .catch((err) => {
-//                     if(err.constraint === "users_useremail_key"){
-//                         res.status(499).send(false);
-//                     }else{
-//                         res.status(404).send(false);
-//                     }
-//                     return trx.rollback;
-//                 })
-
-//             } catch(err) {
-//                 res.status(404).send("Could not insert for some reason");
-//             }  
-//         }); 
-          
-//     });
-    
-// })
 
 app.listen(3000);
 
