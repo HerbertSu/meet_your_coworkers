@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Encode Sans Condensed', sans-serif;
+  /* color: white; */
+  background-image: url("https://s-media-cache-ak0.pinimg.com/originals/4f/2f/7d/4f2f7d2aa8582dcca07ca3eb600e922b.jpg")
+}
+
+button {
+  background-color: rgb(101, 122, 218); 
+  border: 0em;
+  border-radius: 0.25rem;
+  color: white;
+  padding: 0.2rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: black;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
